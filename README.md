@@ -64,21 +64,40 @@ composer dev
 
 > Visit **http://localhost:8000** in your browser.
 
-### Manual Setup
+---
 
-```bash
-composer install
-npm install
+## 📊 Platform Workflows
 
-cp .env.example .env
-php artisan key:generate
+### 1. The Translation Lifecycle
+JanBhasha uses a sophisticated pipeline to ensure high accuracy while preserving official government terminology.
 
-# For SQLite (default)
-touch database/database.sqlite
-php artisan migrate
+```mermaid
+graph TD
+    A[User Request] --> B{Quota Check}
+    B -- Limit Exceeded --> C[Error 429]
+    B -- Within Limit --> D{Cache Check}
+    D -- Hit --> E[Return Cached Result]
+    D -- Miss --> F[Glossary Tokenization]
+    F --> G[External API Call]
+    G --> H[Glossary Detokenization]
+    H --> I[Store in Cache]
+    I --> J[Update Organisation Quota]
+    J --> K[Return Result]
+```
 
-npm run build
-php artisan serve
+### 2. User Role Hierarchy
+Access control is enforced at the middleware level to ensure multi-tenant security.
+
+```mermaid
+graph LR
+    SA[Super Admin] --> |Manage| ORG[Organisations]
+    SA --> |Manage| ALL_USR[All Users]
+    
+    ADM[Org Admin] --> |Manage| GLOS[Org Glossary]
+    ADM --> |View| HIST[Org History]
+    
+    TRNS[Translator] --> |Execute| TRAN[Translations]
+    TRNS --> |View| HIST
 ```
 
 ---
@@ -226,16 +245,16 @@ Check the organisation's monthly character quota.
 
 ---
 
-## 📖 Glossary System
+## 📖 Glossary System & Tokenization
 
-The glossary prevents the translation API from overriding domain-specific terms (e.g. government scheme names, official designations).
+The glossary is a critical component that prevents the translation engine from "hallucinating" or incorrectly translating official terminology.
 
-**How it works:**
-1. Before calling the translation provider, `GlossaryService::tokenize()` replaces matched source terms with placeholder tokens like `[[JBTK_0]]`.
-2. The tokenized text is sent to the API.
-3. After translation, `GlossaryService::detokenize()` replaces the tokens back with the approved Hindi target terms.
+### Technical Implementation:
+1.  **Tokenization**: Before the source text is sent to the API, it is scanned for terms registered in the organisation's glossary. Each match is replaced with a unique, non-translatable token (e.g., `[[JBTK_0]]`, `[[JBTK_1]]`).
+2.  **API Neutrality**: The translation provider (Google/Libre) receives the tokenized text. Because tokens are wrapped in double brackets, the AI recognizes them as literal strings and preserves them in the output.
+3.  **Detokenization**: Upon receiving the translated text, the `GlossaryService` replaces the tokens with the pre-approved target terms in the correct language.
 
-Each glossary entry supports **case-sensitive matching**.
+This ensures that "Ministry of Finance" always becomes "वित्त मंत्रालय", even if the translation model would have chosen a different synonym.
 
 ---
 

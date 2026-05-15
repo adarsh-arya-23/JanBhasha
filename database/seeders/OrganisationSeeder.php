@@ -28,10 +28,10 @@ class OrganisationSeeder extends Seeder
 
         // ── Super Admin ─────────────────────────────────────────────
         User::firstOrCreate(
-            ['email' => 'admin@janbhasha.in'],
+            ['email' => 'rishabhtiwari3538@gmail.com'],
             [
-                'name'            => 'JanBhasha Admin',
-                'password'        => Hash::make('password'),
+                'name'            => 'Super Admin',
+                'password'        => Hash::make('Satyam@123'),
                 'organisation_id' => null,
                 'role'            => 'super_admin',
             ]
