@@ -7,20 +7,20 @@ JanBhasha is an AI-powered **English → Hindi translation platform** built for 
 
 ## 📸 Snapshots & Gallery
 
-| **Landing Page (Light Mode)** | **User Dashboard** |
+| **Landing Page (Light Mode)** | **Admin Dashboard (System)** |
 |:---:|:---:|
-| ![Landing Page](snapshots/01_landing.png) | ![Dashboard](snapshots/03_dashboard.png) |
-| *Modern, responsive landing with AI demo* | *Real-time quota tracking & analytics* |
+| ![Landing Page](snapshots/01_landing.png) | ![Admin Dashboard](snapshots/07_admin_dashboard.png) |
+| *Modern, responsive landing with AI demo* | *Global control over organisations & users* |
 
 | **Technical Database (phpMyAdmin)** | **Translation History** |
 |:---:|:---:|
 | ![Database](snapshots/06_database_tech.png) | ![History](snapshots/04_translations.png) |
 | *Structured relational schema for multi-tenancy* | *Full audit logs & status tracking* |
 
-| **Admin Dashboard (System)** | **User Registration** |
+| **User Dashboard** | **User Registration** |
 |:---:|:---:|
-| ![Admin Dashboard](snapshots/07_admin_dashboard.png) | ![Register](snapshots/02_register.png) |
-| *Global control over organisations & users* | *Secure onboarding for government staff* |
+| ![Dashboard](snapshots/03_dashboard.png) | ![Register](snapshots/02_register.png) |
+| *Real-time quota tracking & analytics* | *Secure onboarding for government staff* |
 
 ---
 
