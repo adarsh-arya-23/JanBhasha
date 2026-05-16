@@ -19,6 +19,9 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+// Public demo translation
+Route::post('/api/translate', [TranslationController::class, 'demoTranslate'])->name('demo.translate');
+
 // Tour complete
 Route::post('/tour/complete', function () {
     auth()->user()->update(['tour_completed' => true]);
