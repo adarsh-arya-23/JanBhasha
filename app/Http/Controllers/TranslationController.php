@@ -99,4 +99,32 @@ class TranslationController extends Controller
             ->route('translations.index')
             ->with('success', 'Translation record deleted.');
     }
+
+    /**
+     * Public translation demo (no auth required).
+     */
+    public function demoTranslate(Request $request)
+    {
+        $request->validate([
+            'text'            => 'required|string|max:5000',
+            'source_language' => 'nullable|string|size:2',
+            'target_language' => 'required|string|size:2',
+        ]);
+        
+        try {
+            $translated = $this->translationService->rawTranslate(
+                $request->text,
+                $request->input('source_language', 'en'),
+                $request->target_language
+            );
+            
+            return response()->json([
+                'translated_text' => $translated,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
 }
