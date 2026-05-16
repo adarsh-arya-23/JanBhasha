@@ -17,6 +17,11 @@ JanBhasha is an AI-powered **English → Hindi translation platform** built for 
 | ![Database](snapshots/06_database_tech.png) | ![History](snapshots/04_translations.png) |
 | *Structured relational schema for multi-tenancy* | *Full audit logs & status tracking* |
 
+| **Admin Dashboard (System)** | **User Registration** |
+|:---:|:---:|
+| ![Admin Dashboard](snapshots/07_admin_dashboard.png) | ![Register](snapshots/02_register.png) |
+| *Global control over organisations & users* | *Secure onboarding for government staff* |
+
 ---
 
 ## ✨ Features
