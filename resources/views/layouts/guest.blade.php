@@ -123,11 +123,18 @@
         }
 
         (function() {
-            if (localStorage.getItem('theme') === 'light') {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'light') {
                 document.body.classList.add('light-mode');
                 document.addEventListener('DOMContentLoaded', () => {
                     const icon = document.getElementById('theme-icon');
                     if (icon) icon.textContent = '☀️';
+                });
+            } else {
+                document.body.classList.remove('light-mode');
+                document.addEventListener('DOMContentLoaded', () => {
+                    const icon = document.getElementById('theme-icon');
+                    if (icon) icon.textContent = '🌓';
                 });
             }
         })();
