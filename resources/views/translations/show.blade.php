@@ -6,7 +6,7 @@
         {{-- Status banner --}}
         @if($translation->status === 'failed')
         <div class="flash-error flex items-center gap-3">
-            <span class="text-xl">❌</span>
+            <span class="text-xl text-red-600"><i class="fas fa-times-circle"></i></span>
             <div>
                 <div class="font-semibold">Translation Failed</div>
                 <div class="text-sm mt-0.5">{{ $translation->error_message }}</div>
@@ -96,7 +96,7 @@
         {{-- Actions --}}
         <div class="flex gap-3">
             <a href="{{ route('translations.create') }}" class="btn-primary text-sm inline-flex items-center gap-2">
-                ✍️ New Translation
+                <i class="fas fa-pen"></i> New Translation
             </a>
             <a href="{{ route('translations.index') }}" class="btn-secondary text-sm">
                 ← View History

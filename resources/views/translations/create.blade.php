@@ -4,7 +4,7 @@
     <div class="max-w-3xl fade-in">
         <div class="card p-8">
             <div class="flex items-center gap-3 mb-6">
-                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl">✍️</div>
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl text-blue-600"><i class="fas fa-pen"></i></div>
                 <div>
                     <h2 class="font-bold text-white">Multi-Language Translation</h2>
                     <p class="text-sm text-slate-400">Official government content translation between Indian languages</p>
@@ -70,11 +70,10 @@
                     </div>
                 </div>
 
-
                 {{-- Org glossary note --}}
                 @if($org && $org->glossaries()->count() > 0)
                 <div class="bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 text-sm text-blue-700 flex items-start gap-2">
-                    <span class="mt-0.5">📖</span>
+                    <span class="mt-0.5"><i class="fas fa-book"></i></span>
                     <span>{{ $org->glossaries()->count() }} custom glossary terms will be applied before translation.</span>
                 </div>
                 @endif
@@ -91,7 +90,7 @@
 
         {{-- Tips card --}}
         <div class="mt-5 bg-amber-50 border border-amber-200 rounded-xl p-5">
-            <h4 class="text-sm font-semibold text-amber-800 mb-2">💡 Tips for Better Translations</h4>
+            <h4 class="text-sm font-semibold text-amber-800 mb-2"><i class="fas fa-lightbulb"></i> Tips for Better Translations</h4>
             <ul class="text-sm text-amber-700 space-y-1 list-disc list-inside">
                 <li>Use formal, structured sentences for best results</li>
                 <li>Custom glossary terms in your organisation will be preserved</li>
