@@ -28,7 +28,15 @@
         .logo-text{color:#fff;font-weight:700;font-size:16px;}
         .logo-sub{color:rgba(255,255,255,0.6);font-size:11px;display:block;}
         .nav-right{display:flex;align-items:center;gap:12px;}
-        .lang-select{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;padding:6px 12px;border-radius:6px;font-size:13px;cursor:pointer;}
+        /* Custom language dropdown */
+        .lang-drop{position:relative;display:inline-block;}
+        .lang-drop-btn{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;}
+        .lang-drop-btn:hover{background:rgba(255,255,255,0.18);}
+        .lang-drop-btn .arrow{font-size:10px;opacity:0.7;transition:.2s;}
+        .lang-drop-menu{position:absolute;top:calc(100% + 6px);right:0;background:#1a237e;border:1px solid rgba(255,255,255,0.2);border-radius:10px;overflow:hidden;min-width:130px;box-shadow:0 8px 24px rgba(0,0,0,0.35);display:none;z-index:200;}
+        .lang-drop-menu.open{display:block;}
+        .lang-drop-item{padding:10px 16px;color:#fff;font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:8px;}
+        .lang-drop-item:hover,.lang-drop-item.active{background:rgba(255,255,255,0.12);}
         .nav-btn{padding:8px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;}
         .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,0.3);}
         .btn-orange{background:var(--saffron);color:#fff;}
@@ -160,17 +168,34 @@
                 </div>
             </a>
             <div class="nav-right">
-                <select class="lang-select">
-                    <option>🌐 English</option>
-                    <option>हिंदी</option>
-                </select>
-                <span style="color:rgba(255,255,255,0.5);font-size:13px;">A+</span>
-                <div class="user-pill">
-                    <span>👤</span>
-                    <span>Rajesh Kumar</span>
-                    <span style="font-size:11px;color:rgba(255,255,255,0.5);">Ministry of Electronics &amp; IT</span>
+                <div class="lang-drop" id="lang-drop">
+                    <button class="lang-drop-btn" onclick="toggleLangMenu()" type="button">
+                        <span id="lang-label">&#127760; English</span>
+                        <span class="arrow">&#9660;</span>
+                    </button>
+                    <div class="lang-drop-menu" id="lang-drop-menu">
+                        <div class="lang-drop-item active" data-lang="en" onclick="selectLang('en')">
+                            &#127760; English
+                        </div>
+                        <div class="lang-drop-item" data-lang="hi" onclick="selectLang('hi')">
+                            &#127470;&#127475; हिंदी
+                        </div>
+                    </div>
                 </div>
-                <a href="{{ route('register') }}" class="nav-btn btn-orange">Get Started</a>
+                <span style="color:rgba(255,255,255,0.5);font-size:13px;">A+</span>
+                @auth
+                    <div class="user-pill">
+                        <span>👤</span>
+                        <span>{{ auth()->user()->name }}</span>
+                        @if(auth()->user()->organisation)
+                            <span style="font-size:11px;color:rgba(255,255,255,0.5);">{{ auth()->user()->organisation->name }}</span>
+                        @endif
+                    </div>
+                    <a href="{{ route('dashboard') }}" class="nav-btn btn-orange">Dashboard</a>
+                @else
+                    <a href="{{ route('login') }}" class="nav-btn btn-ghost">Sign In</a>
+                    <a href="{{ route('register') }}" class="nav-btn btn-orange">Get Started</a>
+                @endauth
             </div>
         </div>
     </nav>
@@ -178,11 +203,11 @@
     <!-- Hero -->
     <section class="hero">
         <div class="hero-inner">
-            <h1>AI-Powered Multilingual Translation<br>for <span>Indian Government Notices</span></h1>
-            <p>Streamline notice creation and delivery. Empower every citizen to understand official communications.</p>
+            <h1 data-en="AI-Powered Multilingual Translation for Indian Government Notices" data-hi="भारतीय सरकारी सूचनाओं के लिए AI-संचालित बहुभाषी अनुवाद">AI-Powered Multilingual Translation<br>for <span>Indian Government Notices</span></h1>
+            <p data-en="Streamline notice creation and delivery. Empower every citizen to understand official communications." data-hi="सूचना निर्माण और वितरण को सुव्यवस्थित करें। प्रत्येक नागरिक को आधिकारिक संचार समझने में सशक्त बनाएं।">Streamline notice creation and delivery. Empower every citizen to understand official communications.</p>
             <div class="hero-btns">
-                <a href="{{ route('register') }}" class="btn-primary">Translate New Notice</a>
-                <a href="{{ route('login') }}" class="btn-secondary">Learn More</a>
+                <a href="{{ route('register') }}" class="btn-primary" data-en="Translate New Notice" data-hi="नई सूचना अनुवाद करें">Translate New Notice</a>
+                <a href="{{ route('login') }}" class="btn-secondary" data-en="Learn More" data-hi="अधिक जानें">Learn More</a>
             </div>
 
             <!-- Live Preview -->
@@ -214,19 +239,19 @@
         <div class="stats-inner">
             <div>
                 <div class="stat-val">50+</div>
-                <div class="stat-label">Government Depts.</div>
+                <div class="stat-label" data-i18n="stat-1-label">Government Depts.</div>
             </div>
             <div>
                 <div class="stat-val">2M+</div>
-                <div class="stat-label">Notices Translated</div>
+                <div class="stat-label" data-i18n="stat-2-label">Notices Translated</div>
             </div>
             <div>
                 <div class="stat-val">99.9%</div>
-                <div class="stat-label">Uptime SLA</div>
+                <div class="stat-label" data-i18n="stat-3-label">Uptime SLA</div>
             </div>
             <div>
                 <div class="stat-val">&lt; 1s</div>
-                <div class="stat-label">Avg. Response</div>
+                <div class="stat-label" data-i18n="stat-4-label">Avg. Response</div>
             </div>
         </div>
     </div>
@@ -234,7 +259,7 @@
     <!-- Latest Notices -->
     <section class="section" style="background:#f5f7fa;">
         <div class="section-inner">
-            <div class="section-title">Latest Government Notices</div>
+            <div class="section-title" data-i18n="sec-notices">Latest Government Notices</div>
             <div class="notices-grid">
                 @foreach([
                     ['🏠','MoHit','Pradhan Mantri Awas Yojana — Allocation Notice','18.11.2024'],
@@ -267,7 +292,7 @@
     <!-- Translation Demo -->
     <section class="section" style="background:#fff;">
         <div class="section-inner">
-            <div class="section-title">Try Translation</div>
+            <div class="section-title" data-i18n="sec-try">Try Translation</div>
             <div class="demo-section">
                 <div>
                     <div class="demo-label">🇬🇧 English (Original)</div>
@@ -310,7 +335,7 @@
         <div class="section-inner">
             <div class="langs-grid">
                 <div>
-                    <div class="sub-title">Supported Languages &amp; Departments</div>
+                    <div class="sub-title" data-i18n="sec-langs">Supported Languages &amp; Departments</div>
                     <div class="dept-grid">
                         @foreach([['🏛️','MoKit'],['🏛️','MoHUA'],['💰','MoF'],['🏛️','MoF'],['🏛️','MoF'],['🏥','MoHFW'],['🚔','Delhi Police']] as $d)
                         <div class="dept-item">
@@ -321,7 +346,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="sub-title">Supported Languages</div>
+                    <div class="sub-title" data-i18n="sec-sup-langs">Supported Languages</div>
                     <div class="lang-grid">
                         @foreach([['🇬🇧','English'],['हि','Hindi'],['বা','Bengali'],['అ','Telugu'],['ত','Telugu'],['मा','Marathi'],['த','Tamil'],['த','Tamil'],['मर','Marathi'],['த','Tamil'],['Depts','Depts'],['Belic','Belic']] as $l)
                         <div class="lang-item">
@@ -339,7 +364,7 @@
     <section class="section" style="background:#fff;">
         <div class="section-inner two-col">
             <div>
-                <div class="sub-title">Public Services</div>
+                <div class="sub-title" data-i18n="sec-services">Public Services</div>
                 <div class="services-grid">
                     @foreach([['✅','Verify Translated Notice'],['💬','Citizens Feedback'],['📡','API Documentation']] as $s)
                     <div class="service-item">
@@ -350,7 +375,7 @@
                 </div>
             </div>
             <div>
-                <div class="sub-title">Accessibility Focus</div>
+                <div class="sub-title" data-i18n="sec-a11y">Accessibility Focus</div>
                 <div class="a11y-grid">
                     @foreach([
                         ['Aa','Large fonts','Large fonts aids and services'],
@@ -374,17 +399,38 @@
     <!-- Footer -->
     <footer>
         <div class="footer-top">
-            <a href="#">About JanBhasha</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Feedback</a>
-            <a href="#">Help Centre</a>
-            <a href="#">Digital India Portal</a>
+            <a href="#" data-i18n="footer-about">About JanBhasha</a>
+            <a href="#" data-i18n="footer-privacy">Privacy Policy</a>
+            <a href="#" data-i18n="footer-terms">Terms of Service</a>
+            <a href="#" data-i18n="footer-feedback">Feedback</a>
+            <a href="#" data-i18n="footer-help">Help Centre</a>
+            <a href="#" data-i18n="footer-portal">Digital India Portal</a>
         </div>
-        <div class="footer-copy">© {{ date('Y') }} JanBhasha — An Initiative by Ministry of Electronics &amp; IT, Government of India. Hosted by NIC.</div>
+        <div class="footer-copy" data-i18n="footer-copy">© {{ date('Y') }} JanBhasha — An Initiative by Ministry of Electronics &amp; IT, Government of India. Hosted by NIC.</div>
     </footer>
 
     <script>
+    // ── Custom lang dropdown ──
+    function toggleLangMenu() {
+        document.getElementById('lang-drop-menu').classList.toggle('open');
+    }
+    function selectLang(lang) {
+        document.getElementById('lang-drop-menu').classList.remove('open');
+        const labels = {en: '&#127760; English', hi: '&#127470;&#127475; हिंदी'};
+        document.getElementById('lang-label').innerHTML = labels[lang];
+        document.querySelectorAll('.lang-drop-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.lang === lang);
+        });
+        switchLang(lang);
+    }
+    // Close menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!document.getElementById('lang-drop').contains(e.target)) {
+            document.getElementById('lang-drop-menu').classList.remove('open');
+        }
+    });
+
+    // ── Translation demo ──
     function doTranslate() {
         const text = document.getElementById('src-text').value;
         const lang = document.getElementById('target-lang').value;
@@ -399,6 +445,102 @@
         .then(d=>{ out.textContent = d.translated_text || d.error || 'Error'; })
         .catch(()=>{ out.textContent = 'Translation failed.'; });
     }
+
+    // ── Page-wide language switcher ──
+    const STRINGS = {
+        en: {
+            'page-title':      'AI-Powered Multilingual Translation for Indian Government Notices',
+            'hero-h1-line1':   'AI-Powered Multilingual Translation',
+            'hero-h1-span':    'Indian Government Notices',
+            'hero-p':          'Streamline notice creation and delivery. Empower every citizen to understand official communications.',
+            'btn-translate':   'Translate New Notice',
+            'btn-learn':       'Learn More',
+            'preview-live':    '🟢 Live Translation Preview',
+            'preview-en-flag': '🇬🇧 English (Original)',
+            'preview-hi-flag': '🇮🇳 Hindi (AI Translation)',
+            'stat-1-label':    'Government Depts.',
+            'stat-2-label':    'Notices Translated',
+            'stat-3-label':    'Uptime SLA',
+            'stat-4-label':    'Avg. Response',
+            'sec-notices':     'Latest Government Notices',
+            'sec-try':         'Try Translation',
+            'sec-langs':       'Supported Languages & Departments',
+            'sec-sup-langs':   'Supported Languages',
+            'sec-services':    'Public Services',
+            'sec-a11y':        'Accessibility Focus',
+            'footer-about':    'About JanBhasha',
+            'footer-privacy':  'Privacy Policy',
+            'footer-terms':    'Terms of Service',
+            'footer-feedback': 'Feedback',
+            'footer-help':     'Help Centre',
+            'footer-portal':   'Digital India Portal',
+            'footer-copy':     '© {{ date("Y") }} JanBhasha — An Initiative by Ministry of Electronics & IT, Government of India. Hosted by NIC.',
+        },
+        hi: {
+            'page-title':      'भारतीय सरकारी सूचनाओं के लिए AI-संचालित बहुभाषी अनुवाद',
+            'hero-h1-line1':   'AI-संचालित बहुभाषी अनुवाद',
+            'hero-h1-span':    'भारतीय सरकारी सूचनाओं के लिए',
+            'hero-p':          'सूचना निर्माण और वितरण को सुव्यवस्थित करें। प्रत्येक नागरिक को आधिकारिक संचार समझने में सशक्त बनाएं।',
+            'btn-translate':   'नई सूचना अनुवाद करें',
+            'btn-learn':       'अधिक जानें',
+            'preview-live':    '🟢 लाइव अनुवाद पूर्वावलोकन',
+            'preview-en-flag': '🇬🇧 अंग्रेज़ी (मूल)',
+            'preview-hi-flag': '🇮🇳 हिंदी (AI अनुवाद)',
+            'stat-1-label':    'सरकारी विभाग',
+            'stat-2-label':    'अनुवादित सूचनाएं',
+            'stat-3-label':    'अपटाइम SLA',
+            'stat-4-label':    'औसत प्रतिक्रिया',
+            'sec-notices':     'नवीनतम सरकारी सूचनाएं',
+            'sec-try':         'अनुवाद आज़माएं',
+            'sec-langs':       'समर्थित भाषाएं और विभाग',
+            'sec-sup-langs':   'समर्थित भाषाएं',
+            'sec-services':    'सार्वजनिक सेवाएं',
+            'sec-a11y':        'पहुंच पर ध्यान',
+            'footer-about':    'JanBhasha के बारे में',
+            'footer-privacy':  'गोपनीयता नीति',
+            'footer-terms':    'सेवा की शर्तें',
+            'footer-feedback': 'प्रतिक्रिया',
+            'footer-help':     'सहायता केंद्र',
+            'footer-portal':   'डिजिटल इंडिया पोर्टल',
+            'footer-copy':     '© {{ date("Y") }} JanBhasha — इलेक्ट्रॉनिक्स और सूचना प्रौद्योगिकी मंत्रालय की एक पहल, भारत सरकार। NIC द्वारा होस्ट किया गया।',
+        }
+    };
+
+    function switchLang(lang) {
+        localStorage.setItem('ui-lang', lang);
+        const s = STRINGS[lang] || STRINGS.en;
+
+        // Update all [data-i18n] elements
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.dataset.i18n;
+            if (s[key] !== undefined) el.textContent = s[key];
+        });
+
+        // Update all [data-en] / [data-hi] inline text nodes
+        document.querySelectorAll('[data-en]').forEach(el => {
+            el.textContent = lang === 'hi' ? el.dataset.hi : el.dataset.en;
+        });
+
+        // Page title
+        document.title = s['page-title'];
+
+        // Update html lang
+        document.documentElement.lang = lang;
+
+        // Sync custom dropdown button label
+        const labels = {en: '&#127760; English', hi: '&#127470;&#127475; हिंदी'};
+        const lbl = document.getElementById('lang-label');
+        if (lbl) lbl.innerHTML = labels[lang] || labels.en;
+        document.querySelectorAll('.lang-drop-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.lang === lang);
+        });
+    }
+
+    // Restore saved lang on load
+    (function(){
+        const saved = localStorage.getItem('ui-lang') || 'en';
+        if (saved !== 'en') selectLang(saved);
+    })();
     </script>
 </body>
 </html>
