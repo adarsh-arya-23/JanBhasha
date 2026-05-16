@@ -127,11 +127,19 @@ class TranslationService
                 'status'        => 'failed',
                 'error_message' => $e->getMessage(),
             ]);
-
             throw $e;
         }
 
         return $translation->fresh();
+    }
+
+    /**
+     * Perform a raw translation without database logging or glossary protection.
+     * Used for public demos.
+     */
+    public function rawTranslate(string $text, string $sourceLang = 'en', string $targetLang = 'hi'): string
+    {
+        return $this->callProvider($text, $sourceLang, $targetLang);
     }
 
     /**
