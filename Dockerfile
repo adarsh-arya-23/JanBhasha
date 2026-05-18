@@ -35,6 +35,12 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
+# Install Node.js & NPM (required to compile Vite/Tailwind assets)
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
+    && npm install \
+    && npm run build
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
