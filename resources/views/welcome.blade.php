@@ -21,7 +21,12 @@
         .tribar{height:4px;background:linear-gradient(90deg,#FF9933 33.33%,#fff 33.33% 66.66%,#138808 66.66%);position:fixed;top:0;left:0;right:0;z-index:100;}
 
         /* Navbar */
-        nav{position:fixed;top:4px;left:0;right:0;z-index:90;background:var(--navy);padding:0 32px;}
+        nav{position:fixed;top:4px;left:0;right:0;z-index:90;background:var(--navy);padding:0 16px;}
+        .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;background:transparent;border:none;}
+        .nav-hamburger span{width:22px;height:2px;background:#fff;border-radius:2px;transition:.3s;display:block;}
+        .nav-mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;background:var(--navy);z-index:89;padding:16px;border-top:1px solid rgba(255,255,255,0.1);flex-direction:column;gap:10px;}
+        .nav-mobile-menu.open{display:flex;}
+        .nav-mobile-btn{padding:12px 16px;border-radius:8px;font-size:14px;font-weight:600;text-align:center;}
         .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px;}
         .nav-logo{display:flex;align-items:center;gap:10px;}
         .logo-box{width:36px;height:36px;background:linear-gradient(135deg,var(--saffron),#e65100);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:900;color:#fff;font-size:14px;}
@@ -147,10 +152,41 @@
         .footer-top a{color:rgba(255,255,255,0.7);font-size:12px;}
 
         @media(max-width:900px){
-            .notices-grid,.stats-inner,.langs-grid,.two-col{grid-template-columns:1fr;}
+            .langs-grid,.two-col{grid-template-columns:1fr;}
             .demo-section{grid-template-columns:1fr;}
             .hero h1{font-size:28px;}
             .preview-grid{grid-template-columns:1fr;}
+            .notices-grid{grid-template-columns:repeat(2,1fr);}
+            .stats-inner{grid-template-columns:repeat(2,1fr);}
+        }
+        @media(max-width:640px){
+            nav{padding:0 12px;}
+            .nav-right{display:none;}
+            .nav-hamburger{display:flex;}
+            .hero{padding:90px 16px 40px;}
+            .hero h1{font-size:22px;}
+            .hero p{font-size:14px;}
+            .hero-btns{flex-direction:column;align-items:stretch;}
+            .btn-primary,.btn-secondary{padding:14px 20px;font-size:14px;text-align:center;}
+            .preview-card{margin:24px 0 0;padding:14px;}
+            .preview-grid{grid-template-columns:1fr;}
+            .stats{padding:28px 16px;}
+            .stats-inner{grid-template-columns:repeat(2,1fr);gap:16px;}
+            .stat-val{font-size:24px;}
+            .section{padding:36px 16px;}
+            .section-title{font-size:20px;}
+            .notices-grid{grid-template-columns:1fr;}
+            .demo-section{padding:20px 16px;}
+            .demo-mid{flex-direction:row;flex-wrap:wrap;justify-content:center;}
+            .lang-sel,.translate-btn{width:auto;flex:1;}
+            .langs-grid,.two-col,.a11y-grid{grid-template-columns:1fr;}
+            .lang-grid{grid-template-columns:repeat(3,1fr);}
+            .services-grid{grid-template-columns:repeat(3,1fr);gap:10px;}
+            .service-title{font-size:11px;}
+            .footer-top{gap:12px;}
+            .two-col .section-inner{gap:24px;}
+            .demo-actions{flex-direction:column;}
+            .action-btn,.publish-btn{width:100%;justify-content:center;}
         }
     </style>
 </head>
@@ -174,31 +210,37 @@
                         <span class="arrow">&#9660;</span>
                     </button>
                     <div class="lang-drop-menu" id="lang-drop-menu">
-                        <div class="lang-drop-item active" data-lang="en" onclick="selectLang('en')">
-                            &#127760; English
-                        </div>
-                        <div class="lang-drop-item" data-lang="hi" onclick="selectLang('hi')">
-                            &#127470;&#127475; हिंदी
-                        </div>
+                        <div class="lang-drop-item active" data-lang="en" onclick="selectLang('en')">&#127760; English</div>
+                        <div class="lang-drop-item" data-lang="hi" onclick="selectLang('hi')">&#127470;&#127475; हिंदी</div>
                     </div>
                 </div>
                 <span style="color:rgba(255,255,255,0.5);font-size:13px;">A+</span>
                 @auth
-                    <div class="user-pill">
-                        <span>👤</span>
-                        <span>{{ auth()->user()->name }}</span>
-                        @if(auth()->user()->organisation)
-                            <span style="font-size:11px;color:rgba(255,255,255,0.5);">{{ auth()->user()->organisation->name }}</span>
-                        @endif
-                    </div>
                     <a href="{{ route('dashboard') }}" class="nav-btn btn-orange">Dashboard</a>
                 @else
                     <a href="{{ route('login') }}" class="nav-btn btn-ghost">Sign In</a>
                     <a href="{{ route('register') }}" class="nav-btn btn-orange">Get Started</a>
                 @endauth
             </div>
+            <!-- Hamburger -->
+            <button class="nav-hamburger" id="nav-hamburger" onclick="toggleMobileNav()" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </nav>
+    <!-- Mobile Menu -->
+    <div class="nav-mobile-menu" id="nav-mobile-menu">
+        @auth
+            <a href="{{ route('dashboard') }}" class="nav-mobile-btn btn-orange" style="background:var(--saffron);color:#fff;border-radius:8px;">Dashboard</a>
+        @else
+            <a href="{{ route('login') }}" class="nav-mobile-btn" style="color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:8px;">Sign In</a>
+            <a href="{{ route('register') }}" class="nav-mobile-btn btn-orange" style="background:var(--saffron);color:#fff;border-radius:8px;">Get Started</a>
+        @endauth
+        <div style="border-top:1px solid rgba(255,255,255,0.15);padding-top:10px;display:flex;gap:12px;">
+            <button onclick="selectLang('en');toggleMobileNav()" style="flex:1;padding:10px;background:rgba(255,255,255,0.1);border:none;color:#fff;border-radius:8px;font-size:13px;cursor:pointer;">🌐 English</button>
+            <button onclick="selectLang('hi');toggleMobileNav()" style="flex:1;padding:10px;background:rgba(255,255,255,0.1);border:none;color:#fff;border-radius:8px;font-size:13px;cursor:pointer;">🇮🇳 हिंदी</button>
+        </div>
+    </div>
 
     <!-- Hero -->
     <section class="hero">
@@ -414,6 +456,21 @@
     function toggleLangMenu() {
         document.getElementById('lang-drop-menu').classList.toggle('open');
     }
+    // ── Mobile hamburger menu ──
+    function toggleMobileNav() {
+        const menu = document.getElementById('nav-mobile-menu');
+        const btn = document.getElementById('nav-hamburger');
+        const isOpen = menu.classList.toggle('open');
+        btn.style.opacity = isOpen ? '0.8' : '1';
+    }
+    // Close mobile menu on outside click
+    document.addEventListener('click', function(e) {
+        const menu = document.getElementById('nav-mobile-menu');
+        const btn = document.getElementById('nav-hamburger');
+        if (menu && !menu.contains(e.target) && !btn.contains(e.target)) {
+            menu.classList.remove('open');
+        }
+    });
     function selectLang(lang) {
         document.getElementById('lang-drop-menu').classList.remove('open');
         const labels = {en: '&#127760; English', hi: '&#127470;&#127475; हिंदी'};

@@ -97,6 +97,26 @@
         /* ── Scrollbar ── */
         ::-webkit-scrollbar { width:5px; } ::-webkit-scrollbar-track { background:#0b1120; } ::-webkit-scrollbar-thumb { background:#1d4ed8; border-radius:99px; }
 
+        /* ── Mobile Responsive ── */
+        #mobile-sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:49; }
+        #mobile-sidebar-overlay.open { display:block; }
+        #sidebar-toggle { display:none; }
+        @media(max-width:768px){
+            #sidebar-toggle { display:flex; }
+            aside#sidebar { position:fixed; left:-260px; top:0; bottom:0; z-index:50; width:240px; transition:left .28s cubic-bezier(0.4,0,0.2,1); }
+            aside#sidebar.open { left:0; }
+            .flex.h-screen > div.flex-1 { width:100%; }
+            header { padding:0.75rem 1rem; }
+            header h1 { font-size:1rem; }
+            main.flex-1 { padding:1rem; }
+            .px-8 { padding-left:1rem !important; padding-right:1rem !important; }
+            #chatbot-btn, #finance-news-btn { width:48px; height:48px; font-size:1.2rem; }
+            #chatbot-btn { bottom:16px; right:16px; }
+            #finance-news-btn { bottom:72px; right:16px; }
+            #chatbot-panel { right:8px; bottom:70px; width:calc(100vw - 16px); max-width:360px; }
+            #finance-news-panel { right:8px; bottom:70px; width:calc(100vw - 16px); max-width:380px; }
+        }
+
         /* ── Light Mode Overrides ── */
         body.light-mode { background: #f8fafc; color: #1e293b; }
         body.light-mode header { background: rgba(248,250,252,0.95); border-bottom: 1px solid #e2e8f0; }
@@ -269,6 +289,8 @@
 </head>
 <body class="h-full font-sans antialiased">
 <div class="flex h-screen overflow-hidden">
+    <!-- Mobile sidebar overlay -->
+    <div id="mobile-sidebar-overlay" onclick="toggleSidebar()"></div>
 
     {{-- ── Sidebar ────────────────────────────── --}}
     <aside class="sidebar w-60 flex-shrink-0 flex flex-col" id="sidebar">
@@ -347,9 +369,15 @@
     {{-- ── Main ─────────────────────────── --}}
     <div class="flex-1 flex flex-col overflow-hidden">
         <header class="px-8 py-4 flex items-center justify-between flex-shrink-0">
-            <div>
-                <h1 class="text-xl font-bold text-white">{{ $header ?? 'Dashboard' }}</h1>
-                <p class="text-xs text-slate-500 mt-0.5">{{ now()->format('l, d F Y') }}</p>
+            <div class="flex items-center gap-3">
+                <!-- Mobile sidebar toggle -->
+                <button id="sidebar-toggle" onclick="toggleSidebar()" class="w-9 h-9 rounded-xl bg-blue-900/20 border border-blue-800/30 items-center justify-center hover:border-blue-500 transition-all" aria-label="Menu">
+                    <svg class="w-5 h-5 text-slate-400 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+                <div>
+                    <h1 class="text-xl font-bold text-white">{{ $header ?? 'Dashboard' }}</h1>
+                    <p class="text-xs text-slate-500 mt-0.5">{{ now()->format('l, d F Y') }}</p>
+                </div>
             </div>
             <div class="flex items-center gap-3">
                 <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-blue-900/20 border border-blue-800/30 flex items-center justify-center hover:border-blue-500 transition-all group" title="Switch Mode">
@@ -468,6 +496,14 @@
 
 <script src="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.umd.js"></script>
 <script>
+// ── Mobile Sidebar ──
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('mobile-sidebar-overlay');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('open');
+}
+
 // ── Chatbot ──
 let chatOpen = false;
 const botPanel = document.getElementById('chatbot-panel');
