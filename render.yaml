@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: janbhasha
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    branch: master
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: JanBhasha
+      - key: APP_ENV
+        value: production
+      - key: APP_KEY
+        value: base64:dfgE04TEdcEInAi0kC40xhdmaxP0TaYxbrgVXovmfJw=
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://janbhasha.onrender.com
+      - key: DB_CONNECTION
+        value: mongodb
+      - key: DB_URL
+        value: mongodb+srv://janbhasha:janbhasha123@cluster0.badsxit.mongodb.net/janbhasha?retryWrites=true&w=majority&appName=Cluster0
+      - key: DB_DATABASE
+        value: janbhasha
+      - key: SESSION_DRIVER
+        value: cookie
+      - key: CACHE_STORE
+        value: database
+      - key: VIEW_COMPILED_PATH
+        value: /tmp
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: TRANSLATION_PROVIDER
+        value: mock
