@@ -23,9 +23,13 @@ class OrganisationController extends Controller implements HasMiddleware
     public function index()
     {
         $organisations = Organisation::withTrashed()
-            ->withCount('users', 'translations')
             ->latest()
             ->paginate(20);
+
+        foreach ($organisations as $org) {
+            $org->users_count = \App\Models\User::where('organisation_id', $org->id)->count();
+            $org->translations_count = \App\Models\Translation::where('organisation_id', $org->id)->count();
+        }
 
         return view('admin.organisations.index', compact('organisations'));
     }
@@ -46,7 +50,9 @@ class OrganisationController extends Controller implements HasMiddleware
 
     public function show(Organisation $organisation)
     {
-        $organisation->loadCount('users', 'translations', 'glossaries');
+        $organisation->users_count = \App\Models\User::where('organisation_id', $organisation->id)->count();
+        $organisation->translations_count = \App\Models\Translation::where('organisation_id', $organisation->id)->count();
+        $organisation->glossaries_count = \App\Models\Glossary::where('organisation_id', $organisation->id)->count();
         $organisation->load('users');
 
         $recentTranslations = $organisation->translations()
