@@ -65,7 +65,7 @@ class Translation extends Model
         return $query->where('status', 'pending');
     }
 
-    public function scopeForOrganisation($query, int $organisationId)
+    public function scopeForOrganisation($query, $organisationId)
     {
         return $query->where('organisation_id', $organisationId);
     }

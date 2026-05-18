@@ -75,9 +75,15 @@
         .slide-in { animation:slideIn .3s ease both; }
 
         /* ── Chatbot ── */
-        #chatbot-btn { position:fixed; bottom:28px; right:28px; z-index:9999; width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow:0 8px 32px rgba(37,99,235,0.5); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.6rem; transition:all .3s cubic-bezier(0.34,1.56,0.64,1); }
+        #chatbot-btn { position:fixed; bottom:28px; right:28px; z-index:9999; width:58px; height:58px; border-radius:50%; background:linear-gradient(135deg,#2563eb,#1d4ed8); box-shadow:0 8px 32px rgba(37,99,235,0.5); border:2px solid transparent; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.6rem; transition:all .3s cubic-bezier(0.34,1.56,0.64,1); }
         #chatbot-btn:hover { transform:scale(1.12); box-shadow:0 12px 40px rgba(37,99,235,0.7); }
-        #chatbot-panel { position:fixed; bottom:100px; right:28px; z-index:9998; width:360px; max-height:520px; background:#0f172a; border:1px solid rgba(37,99,235,0.3); border-radius:20px; box-shadow:0 24px 80px rgba(0,0,0,.6); display:flex; flex-direction:column; overflow:hidden; transition:all .3s cubic-bezier(0.34,1.56,0.64,1); transform-origin:bottom right; }
+        #chatbot-btn.active {
+            background: #0f172a !important;
+            border-color: #2563eb !important;
+            box-shadow: 0 0 24px rgba(37,99,235,0.6) !important;
+            transform: scale(0.92) !important;
+        }
+        #chatbot-panel { position:fixed; bottom:28px; right:100px; z-index:9998; width:360px; max-height:520px; background:#0f172a; border:1px solid rgba(37,99,235,0.3); border-radius:20px; box-shadow:0 24px 80px rgba(0,0,0,.6); display:flex; flex-direction:column; overflow:hidden; transition:all .3s cubic-bezier(0.34,1.56,0.64,1); transform-origin:bottom right; }
         #chatbot-panel.hidden { opacity:0; transform:scale(0.85); pointer-events:none; }
         .chat-msg-bot { background:rgba(37,99,235,0.12); border:1px solid rgba(37,99,235,0.2); border-radius:14px 14px 14px 4px; padding:.65rem 1rem; color:#93c5fd; font-size:.875rem; max-width:85%; align-self:flex-start; }
         .chat-msg-user { background:rgba(37,99,235,0.9); border-radius:14px 14px 4px 14px; padding:.65rem 1rem; color:white; font-size:.875rem; max-width:85%; align-self:flex-end; }
@@ -140,7 +146,7 @@
             border-radius: 50%; 
             background: linear-gradient(135deg, #f59e0b, #d97706); 
             box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4); 
-            border: none; 
+            border: 2px solid transparent; 
             cursor: pointer; 
             display: flex; 
             align-items: center; 
@@ -152,10 +158,16 @@
             transform: scale(1.12); 
             box-shadow: 0 12px 40px rgba(245, 158, 11, 0.6); 
         }
+        #finance-news-btn.active {
+            background: #0f172a !important;
+            border-color: #f59e0b !important;
+            box-shadow: 0 0 24px rgba(245,158,11,0.6) !important;
+            transform: scale(0.92) !important;
+        }
         #finance-news-panel { 
             position: fixed; 
-            bottom: 168px; 
-            right: 28px; 
+            bottom: 28px; 
+            right: 100px; 
             z-index: 9998; 
             width: 380px; 
             height: 540px; 
@@ -167,13 +179,16 @@
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
-            transition: all .3s cubic-bezier(0.34,1.56,0.64,1); 
+            transition: all .35s cubic-bezier(0.34, 1.56, 0.64, 1); 
             transform-origin: bottom right; 
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(20px) scale(0.9);
         }
-        #finance-news-panel.hidden { 
-            opacity: 0; 
-            transform: scale(0.85); 
-            pointer-events: none; 
+        #finance-news-panel.active { 
+            opacity: 1; 
+            pointer-events: auto; 
+            transform: translateY(0) scale(1); 
         }
         
         /* Pulse Animation for Live Indicator */
@@ -365,12 +380,12 @@
 
 {{-- ── Floating Finance News Widget ── --}}
 <button id="finance-news-btn" title="Live Financial News" onclick="toggleNews()">📰</button>
-<div id="finance-news-panel" class="hidden">
+<div id="finance-news-panel">
     <div class="px-5 py-4 border-b border-orange-900/40 flex items-center justify-between bg-orange-950/20">
         <div class="flex items-center gap-2.5">
             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-sm">📈</div>
             <div>
-                <div class="text-sm font-semibold text-white">Live Finance News</div>
+                <div id="news-panel-title" class="text-sm font-semibold text-white">Live Finance News</div>
                 <div class="text-[10px] text-orange-400 flex items-center gap-1.5 font-medium">
                     <span class="live-pulse"></span> India & Global • Real-Time
                 </div>
@@ -460,6 +475,13 @@ const botPanel = document.getElementById('chatbot-panel');
 function toggleChat() {
     chatOpen = !chatOpen;
     botPanel.classList.toggle('hidden', !chatOpen);
+    
+    const btn = document.getElementById('chatbot-btn');
+    if (btn) btn.classList.toggle('active', chatOpen);
+    
+    if (chatOpen) {
+        closeNews();
+    }
 }
 
 const botAnswers = {
@@ -573,11 +595,32 @@ let newsOpen = false;
 let currentNewsTab = 'in';
 let allNewsArticles = [];
 
+function closeNews() {
+    newsOpen = false;
+    const panel = document.getElementById('finance-news-panel');
+    if (panel) panel.classList.remove('active');
+    
+    const btn = document.getElementById('finance-news-btn');
+    if (btn) btn.classList.remove('active');
+}
+
 function toggleNews() {
     newsOpen = !newsOpen;
     const panel = document.getElementById('finance-news-panel');
-    panel.classList.toggle('hidden', !newsOpen);
-    if (newsOpen && allNewsArticles.length === 0) {
+    panel.classList.toggle('active', newsOpen);
+    
+    const btn = document.getElementById('finance-news-btn');
+    if (btn) btn.classList.toggle('active', newsOpen);
+    
+    if (newsOpen) {
+        // Mutual Exclusivity: Close Chatbot Panel if open
+        chatOpen = false;
+        if (botPanel) botPanel.classList.add('hidden');
+        
+        const chatBtn = document.getElementById('chatbot-btn');
+        if (chatBtn) chatBtn.classList.remove('active');
+        
+        // Reload news EVERY time on open!
         fetchNews();
     }
 }
@@ -587,6 +630,13 @@ function switchNewsTab(tab) {
     currentNewsTab = tab;
     document.getElementById('tab-news-in').classList.toggle('active', tab === 'in');
     document.getElementById('tab-news-global').classList.toggle('active', tab === 'global');
+    
+    // Dynamic Header Title update!
+    const titleEl = document.getElementById('news-panel-title');
+    if (titleEl) {
+        titleEl.textContent = tab === 'in' ? 'Live Finance News' : 'Live Global News';
+    }
+    
     fetchNews();
 }
 
@@ -600,8 +650,10 @@ async function fetchNews() {
     `;
     
     try {
+        // India = Finance (business), Global = Non-Finance (general)
+        const category = currentNewsTab === 'in' ? 'business' : 'general';
         const country = currentNewsTab === 'in' ? 'in' : 'us';
-        const response = await fetch(`https://saurav.tech/NewsAPI/categories/business/${country}.json`);
+        const response = await fetch(`https://saurav.tech/NewsAPI/categories/${category}/${country}.json`);
         if (!response.ok) throw new Error("Failed to load news");
         
         const data = await response.json();
@@ -628,7 +680,10 @@ function renderNews(articles) {
         return;
     }
     
-    feed.innerHTML = articles.map(art => {
+    // Slice articles to exactly 12 (within the 10-15 range)
+    const displayArticles = articles.slice(0, 12);
+    
+    feed.innerHTML = displayArticles.map(art => {
         const dateStr = art.publishedAt ? new Date(art.publishedAt).toLocaleDateString('en-IN', {
             month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
         }) : 'Recent';
@@ -687,27 +742,159 @@ function getFallbackNews() {
                 url: "https://www.livemint.com/",
                 publishedAt: new Date().toISOString(),
                 source: { name: "Livemint" }
+            },
+            {
+                title: "FinTech Startups Witness 40% Surge in Early Stage Venture Capital Funding for Q2",
+                description: "Venture capital inflows into Indian payment gateways and digital lending startups show double-digit recovery signs following policy clarity.",
+                url: "https://www.livemint.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Livemint" }
+            },
+            {
+                title: "Government Allocates ₹1.2 Lakh Crore to Propel Semiconductor Manufacturing Hubs in Gujarat",
+                description: "Cabinet approves massive infrastructure grant to speed up commercial semiconductor fabrication fabs in primary industrial zones.",
+                url: "https://economictimes.indiatimes.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Economic Times" }
+            },
+            {
+                title: "Indian Rupee Appreciates 18 Paise Against US Dollar Supported by Weakening Crude Oil Prices",
+                description: "Currency traders report strong capital inflows and a cooling commodities market pushing the local rupee upwards against the USD index.",
+                url: "https://www.moneycontrol.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Moneycontrol" }
+            },
+            {
+                title: "SEBI Introduces New Mutual Fund Risk Disclosures to Safeguard Retail Investor Capital",
+                description: "The capital markets regulator issues strict guidelines requiring asset management companies to explicitly mark risk parameters for small-cap funds.",
+                url: "https://www.livemint.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Livemint" }
+            },
+            {
+                title: "Central Board of Direct Taxes (CBDT) Launches AI-Driven Platform for Instant Tax Filings",
+                description: "New platform enables automated tax assessment, instant validation, and direct support chatbots for individual salaried taxpayers.",
+                url: "https://economictimes.indiatimes.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Economic Times" }
+            },
+            {
+                title: "Export Surge: India's Electronic Shipments Cross $25 Billion Mark in Landmark Achievement",
+                description: "Pushed by domestic assembly programs and smartphone manufacturing corridors, electronic exports reach historic peaks this fiscal year.",
+                url: "https://www.moneycontrol.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Moneycontrol" }
+            },
+            {
+                title: "Real Estate Sector Projects 15% Annual Growth Fueled by Urban Infrastructure Projects",
+                description: "Infrastructure expansion across Tier-2 cities drives residential and commercial real estate demand to record heights.",
+                url: "https://www.livemint.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Livemint" }
+            },
+            {
+                title: "Corporate Earnings: Leading Public Sector Banks Report Record High Net Profit Margins",
+                description: "Declining non-performing assets and robust retail credit demand bolster state-owned banks' balance sheets for consecutive quarters.",
+                url: "https://economictimes.indiatimes.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Economic Times" }
+            },
+            {
+                title: "National Highways Authority of India (NHAI) Announces Infrastructure Bonds for Green Corridors",
+                description: "NHAI opens retail subscription for taxable tax-saving green bonds aimed at developing eco-friendly toll expressways.",
+                url: "https://www.moneycontrol.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Moneycontrol" }
             }
         ],
         global: [
             {
-                title: "Federal Reserve Signals Potential Interest Rate Holds Amid Softening Core Inflation Data",
-                description: "US markets respond positively as Fed Chairman suggests inflation curve is flattening, sparking a global tech and retail stock rally.",
-                url: "https://www.bloomberg.com/",
+                title: "James Webb Telescope Unveils Stunning High-Resolution Details of Distant Spiral Galaxies",
+                description: "Astronomers capture unprecedented molecular clouds and stellar formation patterns, unlocking secrets of cosmic evolution.",
+                url: "https://www.nasa.gov/",
                 publishedAt: new Date().toISOString(),
-                source: { name: "Bloomberg" }
+                source: { name: "NASA Science" }
             },
             {
-                title: "Global Oil Prices Stabilize Around $82 Per Barrel Following OPEC+ Supply Control Decisions",
-                description: "Brent crude futures settled higher as major exporters pledge to maintain voluntary supply cuts to sustain stable global energy pricing.",
+                title: "Global AI Alliance Signed by 30 Countries to Establish Universal Safety Principles",
+                description: "World leaders agree on landmark cooperative policy for developer standards, safety sandboxes, and technology scaling guidelines.",
                 url: "https://www.reuters.com/",
                 publishedAt: new Date().toISOString(),
                 source: { name: "Reuters" }
+            },
+            {
+                title: "Ancient Royal Tomb Uncovered in Central America Dating Back Over 1,500 Years",
+                description: "Archaeological excavators in Guatemala discover remarkably intact royal jade treasures and structural glyph details.",
+                url: "https://www.bbc.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "BBC News" }
+            },
+            {
+                title: "Breakthrough Fusion Energy Reactor Sustains Record Temperature of 100 Million Degrees",
+                description: "Physicists celebrate a major milestone as the experimental fusion core maintains high-temperature plasma stability for record durations.",
+                url: "https://www.bbc.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "BBC News" }
+            },
+            {
+                title: "World Health Organization Declares Elimination of Major Infectious Disease in Southern Africa",
+                description: "Following decades of active immunization campaigns, public health officials declare the region fully cleared of the persistent illness.",
+                url: "https://www.reuters.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Reuters" }
+            },
+            {
+                title: "Deep Sea Exploration Reveals 50 Previously Unknown Marine Species in Mariana Trench",
+                description: "Equipped with advanced robotic submarines, oceanographers bring back high-definition footage of bizarre bioluminescent deep-sea life.",
+                url: "https://www.nasa.gov/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "NASA Science" }
+            },
+            {
+                title: "International Space Station Astronauts Complete Historic Six-Hour Space Walk for Solar Array Upgrades",
+                description: "NASA and European astronauts successfully mount additional high-efficiency solar blankets during an orbital maintenance window.",
+                url: "https://www.nasa.gov/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "NASA Science" }
+            },
+            {
+                title: "Global Literacy Rates Reach All-Time High Following Digital Education Campaigns",
+                description: "UNESCO census report documents a major jump in adult reading and writing capabilities, citing localized mobile learning apps.",
+                url: "https://www.bbc.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "BBC News" }
+            },
+            {
+                title: "Renewable Micro-Grids Provide Clean Electricity to Millions of Off-Grid Households",
+                description: "Sparsely populated rural regions gain immediate access to sustainable solar-battery grids, replacing kerosene utility systems.",
+                url: "https://www.reuters.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Reuters" }
+            },
+            {
+                title: "Rare Historical Manuscripts from Alexandria Library Recovered and Fully Digitized",
+                description: "International historians preserve and publish ancient scroll fragments detailing lost mathematical theorems.",
+                url: "https://www.bbc.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "BBC News" }
+            },
+            {
+                title: "Marine Biologists Report Unprecedented Recovery of Great Barrier Reef Coral Coverage",
+                description: "Targeted coral seeding projects and cooler sea temperatures stimulate rapid growth of critical marine ecosystems.",
+                url: "https://www.reuters.com/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "Reuters" }
+            },
+            {
+                title: "New Biodiversity Sanctuary Established in Amazon Basin Covering Five Million Acres",
+                description: "Five South American nations ratify a coordinated ecological pact to fully protect massive pristine rainforest tracts from exploration.",
+                url: "https://www.nasa.gov/",
+                publishedAt: new Date().toISOString(),
+                source: { name: "NASA Science" }
             }
         ]
     };
 }
-})();
 </script>
 </body>
 </html>
