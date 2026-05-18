@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // Trust all proxies (required for Render, Vercel, and other reverse-proxy hosts)
+        // so that HTTPS is correctly detected and CSRF tokens validate properly
+        $middleware->trustProxies(at: '*');
+
         // Alias for API key authentication
         $middleware->alias([
             'api.key' => \App\Http\Middleware\AuthenticateApiKey::class,

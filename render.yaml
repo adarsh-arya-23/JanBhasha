@@ -17,6 +17,8 @@ services:
         value: false
       - key: APP_URL
         value: https://janbhasha.onrender.com
+      - key: SESSION_SECURE_COOKIE
+        value: false
       - key: DB_CONNECTION
         value: mongodb
       - key: DB_URL
