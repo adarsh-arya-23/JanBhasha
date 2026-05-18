@@ -1,6 +1,8 @@
 # JanBhasha — जनभाषा
 ### *Bridging Government Communication, One Word at a Time*
 
+> 🚀 **Live Deployment:** [https://janbhasha.onrender.com](https://janbhasha.onrender.com)
+
 JanBhasha is an AI-powered **English → Hindi translation platform** built for Indian government organisations. It allows government departments to convert official content into Hindi at scale — via a web dashboard or a REST API — while respecting per-organisation monthly character quotas, maintaining a custom glossary, and logging every translation for audit purposes.
 
 ---
@@ -58,8 +60,9 @@ JanBhasha is an AI-powered **English → Hindi translation platform** built for 
 | **Frontend** | Blade Templates + TailwindCSS v4 + Alpine.js |
 | **Aesthetics** | **Futuristic Dark Mode** + Glassmorphism + Animated Gradients |
 | **AI Engine** | Google Cloud Translation API v2 · LibreTranslate · Free Google Bridge |
-| **Database** | SQLite (dev) · MySQL / PostgreSQL (prod) |
+| **Database** | **MongoDB Atlas** (Cloud NoSQL — `mongodb` driver via PECL extension) |
 | **Authentication** | Laravel Breeze (session) + Laravel Sanctum (API tokens) |
+| **Deployment** | **Render.com** — Dockerized PHP 8.2 + Apache container |
 | **Build Tooling** | Vite + `@tailwindcss/vite` |
 | **Testing** | PHPUnit 11 |
 
@@ -135,13 +138,15 @@ Copy `.env.example` and configure the following keys:
 APP_NAME=JanBhasha
 APP_URL=http://localhost
 
-# Database (SQLite by default for development)
-DB_CONNECTION=sqlite
-# DB_CONNECTION=mysql
-# DB_HOST=127.0.0.1
-# DB_DATABASE=janbhasha
-# DB_USERNAME=root
-# DB_PASSWORD=
+# Database — MongoDB Atlas (required)
+DB_CONNECTION=mongodb
+DB_URL=mongodb+srv://<user>:<password>@cluster0.xxxxx.mongodb.net/janbhasha?retryWrites=true&w=majority
+DB_DATABASE=janbhasha
+
+# Cache & Queue (use array/sync to avoid MongoDB insertOrIgnore issues)
+CACHE_STORE=array
+QUEUE_CONNECTION=sync
+SESSION_DRIVER=cookie
 
 # Translation provider: "google", "libre", or "mock" (for local testing)
 TRANSLATION_PROVIDER=mock
@@ -151,18 +156,20 @@ TRANSLATION_API_KEY=your_google_translate_api_key_here
 TRANSLATION_LIBRE_URL=https://libretranslate.com
 ```
 
+> ⚠️ **MongoDB Note:** Do NOT set `CACHE_STORE=database` or `QUEUE_CONNECTION=database` — MongoDB's grammar does not support `INSERT OR IGNORE` which Laravel's database cache/queue drivers use. Use `array` for cache and `sync` for queue.
+
 ---
 
-## 🗂️ Database Schema
+## 🗂️ Database Schema (MongoDB Collections)
 
 ```
-organisations      – government departments (name, slug, api_key, monthly_char_limit, is_active)
-users              – platform users; belongs to one organisation; role: super_admin | admin | translator
-translations       – every translation request (source, result, provider, status, characters, is_cached)
-glossaries         – per-org custom term overrides (source_term → target_term, case_sensitive)
+organisations  – government departments (name, slug, api_key, monthly_char_limit, is_active)
+users          – platform users; belongs to one organisation; role: super_admin | admin | translator
+translations   – every translation request (source, result, provider, status, characters, is_cached)
+glossaries     – per-org custom term overrides (source_term → target_term, case_sensitive)
 ```
 
-> Soft-deletes are enabled on `organisations` and `translations`.
+> **MongoDB Atlas** is the production database. Collections are schema-less documents managed via the `mongodb/laravel-mongodb` Eloquent driver. Soft-deletes are enabled on `organisations` and `translations`.
 
 ---
 

@@ -34,6 +34,6 @@ services:
       - key: LOG_CHANNEL
         value: stderr
       - key: QUEUE_CONNECTION
-        value: database
+        value: sync
       - key: TRANSLATION_PROVIDER
         value: mock
