@@ -9,7 +9,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('tour_completed')->default(false)->after('role');
+            if (Schema::getConnection()->getDriverName() === 'mongodb') {
+                $table->boolean('tour_completed')->default(false);
+            } else {
+                $table->boolean('tour_completed')->default(false)->after('role');
+            }
         });
     }
 

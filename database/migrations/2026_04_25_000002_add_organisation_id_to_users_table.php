@@ -9,21 +9,28 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('organisation_id')
-                ->nullable()
-                ->after('id')
-                ->constrained('organisations')
-                ->nullOnDelete();
-            $table->enum('role', ['super_admin', 'admin', 'translator'])
-                ->default('translator')
-                ->after('organisation_id');
+            if (Schema::getConnection()->getDriverName() === 'mongodb') {
+                $table->string('organisation_id')->nullable();
+                $table->string('role')->default('translator');
+            } else {
+                $table->foreignId('organisation_id')
+                    ->nullable()
+                    ->after('id')
+                    ->constrained('organisations')
+                    ->nullOnDelete();
+                $table->enum('role', ['super_admin', 'admin', 'translator'])
+                    ->default('translator')
+                    ->after('organisation_id');
+            }
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropForeign(['organisation_id']);
+            if (Schema::getConnection()->getDriverName() !== 'mongodb') {
+                $table->dropForeign(['organisation_id']);
+            }
             $table->dropColumn(['organisation_id', 'role']);
         });
     }
