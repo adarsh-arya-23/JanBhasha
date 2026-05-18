@@ -36,7 +36,7 @@ JanBhasha is an AI-powered **English → Hindi translation platform** built for 
 | Feature | Details |
 |---|---|
 | 📰 **Live Finance News** | Floating 📰 widget with real-time 🇮🇳 India & 🌐 Global financial headlines; searchable feed with India & Global tabs |
-| 🌐 **Translation** | **Any-to-Any Indian Language** via Google Translate, LibreTranslate, or Mock (dev) |
+| 🌐 **Translation** | **Any-to-Any Indian Language + Japanese** via Google Translate, LibreTranslate, or Mock (dev) |
 | 📖 **Custom Glossary** | Per-organisation term overrides; protects domain-specific words from being mangled by the API |
 | 📊 **Monthly Quota** | Configurable character limit per organisation with live usage tracking |
 | 🗂️ **Translation History** | Full audit log with status (`pending` / `completed` / `failed`), character count, provider, and cache flag |

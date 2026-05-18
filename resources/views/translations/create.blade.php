@@ -7,7 +7,7 @@
                 <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl text-blue-600"><i class="fas fa-pen"></i></div>
                 <div>
                     <h2 class="font-bold text-white">Multi-Language Translation</h2>
-                    <p class="text-sm text-slate-400">Official government content translation between Indian languages</p>
+                    <p class="text-sm text-slate-400">Indian languages + Japanese — translate official government content across borders</p>
                 </div>
             </div>
 

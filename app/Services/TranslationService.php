@@ -14,6 +14,9 @@ use RuntimeException;
 
 class TranslationService
 {
+    /**
+     * Supported languages: All 22 official Indian languages + English + Japanese.
+     */
     public const INDIAN_LANGUAGES = [
         'hi'  => 'Hindi (हिन्दी)',
         'bn'  => 'Bengali (বাংলা)',
@@ -34,10 +37,12 @@ class TranslationService
         'ne'  => 'Nepali (नेपाली)',
         'brx' => 'Bodo (बड़ो)',
         'doi' => 'Dogri (डोगरी)',
-        'ks'  => 'Kashmiri (کأशुर)',
+        'ks'  => 'Kashmiri (کأشुر)',
         'mni' => 'Manipuri (মণিপুরী)',
         'sat' => 'Santhali (संताली)',
         'en'  => 'English',
+        // ── International ──
+        'ja'  => '🇯🇵 Japanese (日本語)',
     ];
 
     public function __construct(

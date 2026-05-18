@@ -347,12 +347,13 @@
                 <div class="demo-mid">
                     <div style="font-size:12px;color:var(--text3);">Translating into:</div>
                     <select class="lang-sel" id="target-lang">
-                        <option value="hi">देवनागरी</option>
-                        <option value="ta">தமிழ்</option>
-                        <option value="te">తెలుగు</option>
-                        <option value="bn">বাংলা</option>
-                        <option value="mr">मराठी</option>
-                        <option value="gu">ગુજરાતી</option>
+                        <option value="hi">देवनागरी (Hindi)</option>
+                        <option value="ta">தமிழ் (Tamil)</option>
+                        <option value="te">తెలుగు (Telugu)</option>
+                        <option value="bn">বাংলা (Bengali)</option>
+                        <option value="mr">मराठी (Marathi)</option>
+                        <option value="gu">ગુજરાતી (Gujarati)</option>
+                        <option value="ja">🇯🇵 日本語 (Japanese)</option>
                     </select>
                     <button class="translate-btn" onclick="doTranslate()">Translate</button>
                     <div style="font-size:11px;color:var(--text3);text-align:center;">0.0</div>
