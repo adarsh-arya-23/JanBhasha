@@ -37,8 +37,11 @@ class AdminController extends Controller implements HasMiddleware
             'failed'             => Translation::where('status', 'failed')->count(),
         ];
 
-        $recentOrgs = Organisation::withCount('users', 'translations')
-            ->latest()->limit(5)->get();
+        $recentOrgs = Organisation::latest()->limit(5)->get();
+        foreach ($recentOrgs as $org) {
+            $org->users_count = User::where('organisation_id', $org->id)->count();
+            $org->translations_count = Translation::where('organisation_id', $org->id)->count();
+        }
 
         $recentTranslations = Translation::with(['user', 'organisation'])
             ->latest()->limit(10)->get();
