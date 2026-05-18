@@ -601,7 +601,7 @@ async function fetchNews() {
     
     try {
         const country = currentNewsTab === 'in' ? 'in' : 'us';
-        const response = await fetch(\`https://saurav.tech/NewsAPI/categories/business/\${country}.json\`);
+        const response = await fetch(`https://saurav.tech/NewsAPI/categories/business/${country}.json`);
         if (!response.ok) throw new Error("Failed to load news");
         
         const data = await response.json();
@@ -619,12 +619,12 @@ async function fetchNews() {
 function renderNews(articles) {
     const feed = document.getElementById('news-feed');
     if (articles.length === 0) {
-        feed.innerHTML = \`
+        feed.innerHTML = `
             <div class="text-center py-12 text-slate-500">
                 <div class="text-3xl mb-2">📰</div>
                 <p class="text-xs">No finance articles found matching criteria.</p>
             </div>
-        \`;
+        `;
         return;
     }
     
@@ -635,16 +635,16 @@ function renderNews(articles) {
         
         const sourceName = art.source?.name || 'Finance News';
         
-        return \`
-            <div class="news-card" onclick="window.open('\${art.url}', '_blank')">
+        return `
+            <div class="news-card" onclick="window.open('${art.url}', '_blank')">
                 <div class="flex justify-between items-center mb-1.5">
-                    <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wide bg-amber-500/10 px-2 py-0.5 rounded-md">\${sourceName}</span>
-                    <span class="text-[10px] text-slate-500">\${dateStr}</span>
+                    <span class="text-[10px] font-bold text-amber-500 uppercase tracking-wide bg-amber-500/10 px-2 py-0.5 rounded-md">${sourceName}</span>
+                    <span class="text-[10px] text-slate-500">${dateStr}</span>
                 </div>
-                <h4 class="text-xs font-bold text-slate-100 line-clamp-2 hover:text-amber-400 transition-colors leading-normal mb-1">\${art.title}</h4>
-                <p class="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">\${art.description || 'Click to view full financial news report and stock market updates.'}</p>
+                <h4 class="text-xs font-bold text-slate-100 line-clamp-2 hover:text-amber-400 transition-colors leading-normal mb-1">${art.title}</h4>
+                <p class="text-[11px] text-slate-400 line-clamp-2 leading-relaxed">${art.description || 'Click to view full financial news report and stock market updates.'}</p>
             </div>
-        \`;
+        `;
     }).join('');
 }
 
