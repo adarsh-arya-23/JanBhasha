@@ -22,12 +22,18 @@ JanBhasha is an AI-powered **English → Hindi translation platform** built for 
 | ![Dashboard](snapshots/03_dashboard.png) | ![Register](snapshots/02_register.png) |
 | *Real-time quota tracking & analytics* | *Secure onboarding for government staff* |
 
+| **📰 Live Finance News (Closed)** | **📰 Live Finance News (Open — India Feed)** |
+|:---:|:---:|
+| ![News Button](snapshots/08_news_panel_closed.png) | ![News Panel](snapshots/09_news_panel_open.png) |
+| *Floating 📰 button always accessible on dashboard* | *Real-time India & Global finance news panel* |
+
 ---
 
 ## ✨ Features
 
 | Feature | Details |
 |---|---|
+| 📰 **Live Finance News** | Floating 📰 widget with real-time 🇮🇳 India & 🌐 Global financial headlines; searchable feed with India & Global tabs |
 | 🌐 **Translation** | **Any-to-Any Indian Language** via Google Translate, LibreTranslate, or Mock (dev) |
 | 📖 **Custom Glossary** | Per-organisation term overrides; protects domain-specific words from being mangled by the API |
 | 📊 **Monthly Quota** | Configurable character limit per organisation with live usage tracking |
@@ -376,3 +382,10 @@ The latest update transforms JanBhasha into a cutting-edge portal with several m
 
 ### 4. Enhanced Account Security
 - **Safe Account Deletion**: Deleting a profile now strictly requires the user's **current password** in a secure modal overlay, preventing accidental or unauthorized account removal.
+
+### 5. 📰 Live Finance News Widget
+- **Floating News Button**: A persistent amber 📰 button in the bottom-right corner of every dashboard page gives instant access to live financial news without leaving the app.
+- **India & Global Feeds**: Two tabs — 🇮🇳 India (Sensex, RBI, GST, Budget) and 🌐 Global (world markets, forex) — powered by live news APIs with automatic fallback curated data.
+- **Real-Time Search**: An in-panel search bar lets users instantly filter headlines and summaries across the entire feed.
+- **Landing Page Feature Section**: The JanBhasha welcome page now showcases the news widget in a dedicated dark-themed section with a live preview card, so visitors understand the feature before signing up.
+- **Mutual Exclusivity**: The news panel and support chatbot close each other automatically to keep the interface clean.

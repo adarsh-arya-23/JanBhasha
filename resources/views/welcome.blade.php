@@ -187,6 +187,7 @@
             .two-col .section-inner{gap:24px;}
             .demo-actions{flex-direction:column;}
             .action-btn,.publish-btn{width:100%;justify-content:center;}
+            section[style*="linear-gradient(135deg,#0f172a"] > div > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important;}
         }
     </style>
 </head>
@@ -431,6 +432,60 @@
                             <div class="a11y-title">{{ $a[1] }}</div>
                             <div class="a11y-desc">{{ $a[2] }}</div>
                         </div>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Finance News Feature Banner -->
+    <section class="section" style="background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);padding:60px 32px;">
+        <div class="section-inner" style="max-width:1100px;margin:0 auto;">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;">
+                <!-- Left: Text -->
+                <div>
+                    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.35);border-radius:20px;padding:6px 14px;margin-bottom:20px;">
+                        <span style="width:8px;height:8px;background:#ef4444;border-radius:50%;display:inline-block;box-shadow:0 0 0 3px rgba(239,68,68,0.3);animation:pulse 1.5s infinite;"></span>
+                        <span style="font-size:12px;font-weight:700;color:#fbbf24;letter-spacing:.5px;">LIVE</span>
+                        <span style="font-size:12px;color:rgba(255,255,255,0.6);">Real-Time Financial Intelligence</span>
+                    </div>
+                    <h2 style="font-size:32px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:14px;">Stay Ahead with<br><span style="color:#f59e0b;">Live Finance News</span></h2>
+                    <p style="font-size:15px;color:rgba(255,255,255,0.65);line-height:1.75;margin-bottom:28px;">Access real-time Indian and global financial news directly within your dashboard — no switching tabs. Stay informed on RBI announcements, GST updates, budget circulars, and market movements while you work.</p>
+                    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:32px;">
+                        <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:20px;">🇮🇳</span><div><div style="font-size:13px;font-weight:600;color:#fff;">India Finance Feed</div><div style="font-size:12px;color:rgba(255,255,255,0.5);">Sensex, RBI, GST, Budget — live from top sources</div></div></div>
+                        <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:20px;">🌐</span><div><div style="font-size:13px;font-weight:600;color:#fff;">Global Market Updates</div><div style="font-size:12px;color:rgba(255,255,255,0.5);">World economy, forex, and policy news in one click</div></div></div>
+                        <div style="display:flex;align-items:center;gap:12px;"><span style="font-size:20px;">🔍</span><div><div style="font-size:13px;font-weight:600;color:#fff;">Smart Search & Filter</div><div style="font-size:12px;color:rgba(255,255,255,0.5);">Instantly search across all headlines and summaries</div></div></div>
+                    </div>
+                    <a href="{{ route('register') }}" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:13px 28px;border-radius:10px;font-weight:700;font-size:14px;">📰 Try It in Dashboard →</a>
+                </div>
+                <!-- Right: Preview Card -->
+                <div style="background:rgba(15,23,42,0.85);border:1px solid rgba(245,158,11,0.25);border-radius:20px;padding:20px;backdrop-filter:blur(12px);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);">
+                        <div style="display:flex;align-items:center;gap:10px;">
+                            <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#f59e0b,#d97706);display:flex;align-items:center;justify-content:center;">📈</div>
+                            <div>
+                                <div style="font-size:13px;font-weight:700;color:#fff;">Live Finance News</div>
+                                <div style="font-size:11px;color:#f59e0b;display:flex;align-items:center;gap:6px;"><span style="width:6px;height:6px;background:#ef4444;border-radius:50%;display:inline-block;"></span> India & Global · Real-Time</div>
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:6px;">
+                            <span style="background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);color:#fbbf24;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;">🇮🇳 India</span>
+                            <span style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);color:#64748b;font-size:11px;padding:4px 10px;border-radius:20px;">🌐 Global</span>
+                        </div>
+                    </div>
+                    @foreach([
+                        ['Moneycontrol','Sensex & Nifty Hit Historic Highs Amid Robust GDP Forecast','Indian stock market gains ground as benchmark indices surge...'],
+                        ['Economic Times','GST Collection Grosses ₹1.87 Lakh Crore for May, 12% YoY','The Finance Ministry reported record collection figures...'],
+                        ['Livemint','RBI Announces Extension of Sovereign Gold Bond (SGB) Schemes','The Reserve Bank of India announced terms for the upcoming...'],
+                    ] as $article)
+                    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:12px;margin-bottom:10px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+                            <span style="font-size:10px;font-weight:700;color:#f59e0b;background:rgba(245,158,11,0.1);padding:2px 8px;border-radius:4px;text-transform:uppercase;">{{ $article[0] }}</span>
+                            <span style="font-size:10px;color:rgba(255,255,255,0.3);">Just now</span>
+                        </div>
+                        <div style="font-size:12px;font-weight:600;color:#e2e8f0;line-height:1.4;margin-bottom:4px;">{{ $article[1] }}</div>
+                        <div style="font-size:11px;color:rgba(255,255,255,0.4);line-height:1.5;">{{ $article[2] }}</div>
                     </div>
                     @endforeach
                 </div>
