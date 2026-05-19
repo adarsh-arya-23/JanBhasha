@@ -42,6 +42,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Profile Avatar
+    Route::post('/profile/avatar', [ProfileController::class, 'uploadAvatar'])->name('profile.avatar.upload');
+    Route::delete('/profile/avatar', [ProfileController::class, 'removeAvatar'])->name('profile.avatar.remove');
+
+    // Personal Translation History
+    Route::get('/my-history', [ProfileController::class, 'history'])->name('profile.history');
+
     // Translations
     
     Route::resource('translations', TranslationController::class)
