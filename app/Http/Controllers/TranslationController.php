@@ -18,12 +18,20 @@ class TranslationController extends Controller
      */
     public function index(Request $request)
     {
-        $org = $request->user()->organisation;
+        $user = $request->user();
+        $org  = $user->organisation;
 
         abort_if(!$org, 403, 'You are not associated with any organisation.');
 
-        $translations = Translation::forOrganisation($org->id)
-            ->with('user')
+        // Admins see all org translations; regular users only see their own
+        $query = Translation::forOrganisation($org->id)->with('user');
+
+        if (!$user->isAdmin()) {
+            // Scope to just this user's translations
+            $query->where('user_id', $user->id);
+        }
+
+        $translations = $query
             ->when($request->filled('status'), fn ($q) => $q->where('status', $request->status))
             ->when($request->filled('search'), fn ($q) => $q->where('source_text', 'like', '%' . $request->search . '%'))
             ->latest()
