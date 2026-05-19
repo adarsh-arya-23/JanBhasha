@@ -28,6 +28,7 @@ class User extends Authenticatable
         'organisation_id',
         'role',
         'tour_completed',
+        'avatar_path',
     ];
 
     /**
@@ -52,6 +53,25 @@ class User extends Authenticatable
             'password'          => 'hashed',
             'tour_completed'    => 'boolean',
         ];
+    }
+
+    // ──────────────────────────────────────────
+    // Avatar Helper
+    // ──────────────────────────────────────────
+
+    /**
+     * Returns the public URL for the user's avatar.
+     * Falls back to a generated initials avatar if no photo is set.
+     */
+    public function avatarUrl(): string
+    {
+        if ($this->avatar_path) {
+            return asset('storage/' . $this->avatar_path);
+        }
+        // Initials-based fallback avatar
+        $initial = strtoupper(substr($this->name ?? 'U', 0, 1));
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name ?? 'User')
+            . '&background=2563eb&color=fff&bold=true&size=128';
     }
 
     // ──────────────────────────────────────────
