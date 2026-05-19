@@ -324,6 +324,9 @@
             <a href="{{ route('translations.index') }}" id="nav-history" class="nav-link {{ request()->routeIs('translations.index') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 text-sm">
                 <span>📋</span> History
             </a>
+            <a href="{{ route('profile.history') }}" id="nav-my-history" class="nav-link {{ request()->routeIs('profile.history') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 text-sm">
+                <span>👤</span> My History
+            </a>
             <a href="{{ route('glossary.index') }}" id="nav-glossary" class="nav-link {{ request()->routeIs('glossary.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 text-sm">
                 <span>📖</span> Glossary
             </a>
@@ -348,8 +351,8 @@
         @auth
         <div class="border-t border-blue-900/30 px-3 py-3">
             <div class="flex items-center gap-3 px-2">
-                <a href="{{ route('profile.edit') }}" class="w-8 h-8 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-sm shrink-0 hover:ring-2 hover:ring-orange-400 transition-all" title="Profile">
-                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
+                <a href="{{ route('profile.edit') }}" class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 hover:ring-2 hover:ring-orange-400 transition-all" title="Profile">
+                    <img src="{{ auth()->user()->avatarUrl() }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover">
                 </a>
                 <div class="flex-1 min-w-0">
                     <div class="text-sm font-medium text-slate-200 truncate">{{ auth()->user()->name }}</div>

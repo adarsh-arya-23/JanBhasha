@@ -10,13 +10,20 @@
 
         <div class="card overflow-hidden">
             <div class="px-6 py-5 border-b border-gray-100" style="background: linear-gradient(135deg, #7c3aed, #4f46e5);">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center text-white font-bold text-xl">
-                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-full overflow-hidden ring-4 ring-white/20 flex-shrink-0">
+                        <img src="{{ $user->avatarUrl() }}"
+                             alt="{{ $user->name }}"
+                             class="w-full h-full object-cover">
                     </div>
                     <div>
                         <h2 class="text-lg font-bold text-white">{{ $user->name }}</h2>
                         <p class="text-purple-200 text-sm">{{ $user->email }}</p>
+                        @if($user->avatar_path)
+                        <p class="text-purple-300 text-xs mt-0.5">📷 Has profile picture</p>
+                        @else
+                        <p class="text-purple-400 text-xs mt-0.5">No profile picture uploaded</p>
+                        @endif
                     </div>
                 </div>
             </div>

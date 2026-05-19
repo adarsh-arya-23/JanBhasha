@@ -55,11 +55,15 @@
                         <tr class="table-row">
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-9 h-9 rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                                         style="background: linear-gradient(135deg,
-                                         {{ $user->isSuperAdmin() ? '#7c3aed,#4f46e5' : ($user->isAdmin() ? '#ea580c,#f59e0b' : '#1d4ed8,#3b82f6') }});">
-                                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                                    </div>
+                                    <a href="{{ route('admin.users.edit', $user) }}"
+                                       class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2
+                                              {{ $user->isSuperAdmin() ? 'ring-purple-500/40' : ($user->isAdmin() ? 'ring-amber-500/40' : 'ring-blue-500/40') }}
+                                              hover:ring-opacity-100 transition-all"
+                                       title="View {{ $user->name }}">
+                                        <img src="{{ $user->avatarUrl() }}"
+                                             alt="{{ $user->name }}"
+                                             class="w-full h-full object-cover">
+                                    </a>
                                     <div>
                                         <div class="font-medium text-gray-800">{{ $user->name }}</div>
                                         <div class="text-xs text-gray-400">{{ $user->email }}</div>
