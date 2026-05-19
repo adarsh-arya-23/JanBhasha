@@ -41,8 +41,7 @@ class DashboardController extends Controller
             'cached_translations' => (clone $baseQuery)->where('is_cached', true)->count(),
         ];
 
-        $recentActivity = (clone $baseQuery)
-            ->with('user')
+        $recentActivity = Translation::where('user_id', $user->id)
             ->latest()
             ->limit(10)
             ->get();
