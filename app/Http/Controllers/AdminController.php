@@ -23,7 +23,7 @@ class AdminController extends Controller implements HasMiddleware
         ];
     }
 
-    // ── Dashboard ────────────────────────────────────
+    // ── Dashboard ──────────────────────────
     public function dashboard()
     {
         $stats = [
@@ -49,7 +49,7 @@ class AdminController extends Controller implements HasMiddleware
         return view('admin.dashboard', compact('stats', 'recentOrgs', 'recentTranslations'));
     }
 
-    // ── Users ─────────────────────────────────────────
+    // ── Users ───────────────────────────────
     public function users(Request $request)
     {
         $users = User::with('organisation')
