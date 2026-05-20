@@ -11,14 +11,14 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        // Super admins go to the dedicated admin dashboard
+        // Super admins go to dedicated admin dashboard
         if ($user->isSuperAdmin()) {
             return redirect()->route('admin.dashboard');
         }
 
         $org  = $user->organisation;
 
-        // If the user has no organisation, show a minimal dashboard
+        // If the user has no organisation than it will show a minimal dashboard
         if (!$org) {
             return view('dashboard', [
                 'stats'          => [],
