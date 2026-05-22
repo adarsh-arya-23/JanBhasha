@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-app-layout>
     <x-slot name="header">Admin Dashboard</x-slot>
 
     <div class="fade-in space-y-6">
@@ -163,4 +163,4 @@
             </a>
         </div>
     </div>
-</x-admin-layout>
+</x-app-layout>

@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-app-layout>
     <x-slot name="header">Admin — Create Organisation</x-slot>
 
     <div class="max-w-2xl fade-in">
@@ -88,4 +88,4 @@
             </div>
         </div>
     </div>
-</x-admin-layout>
+</x-app-layout>
