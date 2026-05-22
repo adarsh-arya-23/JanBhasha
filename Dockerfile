@@ -44,7 +44,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 # Pinning to a specific release tag prevents breakage if upstream changes
 ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.7.12/install-php-extensions \
     /usr/local/bin/install-php-extensions
-RUN install-php-extensions mongodb-1.20.1
+# ext-mongodb 2.x is required by mongodb/mongodb ^2.3 and mongodb/laravel-mongodb ^1.21|^2
+RUN install-php-extensions mongodb-2.3.1
 
 # ── Apache configuration ────────────────────────────────────────────────────
 RUN a2enmod rewrite headers
