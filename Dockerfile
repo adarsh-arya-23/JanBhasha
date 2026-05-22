@@ -1,60 +1,107 @@
-# Use official PHP Apache image
+# ──────────────────────────────────────────────────────────────────────────────
+# Stage 1: Node.js asset builder
+# Build CSS/JS assets in a separate stage so the final image stays lean
+# ──────────────────────────────────────────────────────────────────────────────
+FROM node:20-alpine AS node_builder
+
+WORKDIR /app
+
+# Copy only package files first for layer-caching npm install
+COPY package.json package-lock.json ./
+RUN npm ci --prefer-offline
+
+# Copy source files needed for the Vite build
+COPY resources/ resources/
+COPY vite.config.js tailwind.config.js postcss.config.js ./
+COPY public/ public/
+
+# Compile production assets
+RUN npm run build
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Stage 2: PHP / Apache runtime
+# ──────────────────────────────────────────────────────────────────────────────
 FROM php:8.2-apache
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# ── System dependencies ────────────────────────────────────────────────────
+RUN apt-get update && apt-get install -y --no-install-recommends \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
+    libssl-dev \
+    pkg-config \
     zip \
     unzip \
     git \
     curl \
-    libssl-dev \
-    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
+# ── PHP extensions ─────────────────────────────────────────────────────────
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql bcmath
+    && docker-php-ext-install -j$(nproc) gd pdo pdo_mysql bcmath opcache
 
-# Install and enable MongoDB extension (CRITICAL for JanBhasha NoSQL backend!)
-# Using install-php-extensions to avoid pecl build timeouts/OOM on Render free tier
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN chmod +x /usr/local/bin/install-php-extensions && install-php-extensions mongodb
+# ── MongoDB PHP extension (pinned stable release via install-php-extensions) ──
+# Pinning to a specific release tag prevents breakage if upstream changes
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/download/2.7.12/install-php-extensions \
+    /usr/local/bin/install-php-extensions
+RUN install-php-extensions mongodb-1.20.1
 
-# Enable Apache mod_rewrite for Laravel routing
-RUN a2enmod rewrite
+# ── Apache configuration ────────────────────────────────────────────────────
+RUN a2enmod rewrite headers
 
-# Configure Apache Document Root to point to Laravel's public directory
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+      /etc/apache2/sites-available/*.conf \
+      /etc/apache2/apache2.conf \
+      /etc/apache2/conf-available/*.conf
 
-# Set working directory
+# Allow .htaccess overrides (needed for Laravel routing)
+RUN sed -i 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
+
+# ── OPcache configuration ───────────────────────────────────────────────────
+RUN { \
+    echo 'opcache.enable=1'; \
+    echo 'opcache.memory_consumption=128'; \
+    echo 'opcache.interned_strings_buffer=8'; \
+    echo 'opcache.max_accelerated_files=10000'; \
+    echo 'opcache.revalidate_freq=60'; \
+    echo 'opcache.fast_shutdown=1'; \
+} > /usr/local/etc/php/conf.d/opcache.ini
+
 WORKDIR /var/www/html
 
-# Copy application files
+# ── Composer (pinned to v2) ─────────────────────────────────────────────────
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# ── PHP dependencies ────────────────────────────────────────────────────────
+# Copy composer files first for layer-caching
+COPY composer.json composer.lock ./
+RUN composer install \
+    --no-dev \
+    --no-scripts \
+    --no-autoloader \
+    --prefer-dist \
+    --optimize-autoloader
+
+# ── Application source ──────────────────────────────────────────────────────
 COPY . .
 
-# Install Node.js & NPM (required to compile Vite/Tailwind assets)
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install \
-    && npm run build
+# ── Bring in pre-built frontend assets from Stage 1 ────────────────────────
+COPY --from=node_builder /app/public/build public/build
 
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# ── Re-run autoloader with app files present ────────────────────────────────
+RUN composer dump-autoload --optimize --no-scripts
 
-# Run Composer Install to optimize autoloader and cache configurations in production
-RUN composer install --no-dev --optimize-autoloader
-
-# Set permissions for storage and bootstrap cache
+# ── Permissions ─────────────────────────────────────────────────────────────
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# Expose port 80 for Render/Web traffic
+# ── Startup script ──────────────────────────────────────────────────────────
+# Run Laravel boot tasks at container start (not build time) so env vars are available
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 EXPOSE 80
 
-# Start Apache
+ENTRYPOINT ["docker-entrypoint.sh"]
 CMD ["apache2-foreground"]

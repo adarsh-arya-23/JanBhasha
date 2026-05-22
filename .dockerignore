@@ -1,9 +1,47 @@
+# Git & IDE
 .git
+.gitignore
+.gitattributes
+.editorconfig
+.idea
+.vscode
+
+# Local environment secrets — NEVER bake into image
 .env
+.env.*
+!.env.example
+
+# PHP dependencies — installed inside container via composer
 vendor
+
+# Node dependencies & source assets — compiled in Stage 1, not needed in Stage 2
 node_modules
+resources/js
+resources/css
+
+# Laravel runtime directories — generated at runtime
 bootstrap/cache/*
 storage/framework/cache/*
 storage/framework/sessions/*
 storage/framework/views/*
 storage/logs/*
+
+# Dev/test files
+tests
+phpunit.xml
+*.phpunit.result.cache
+
+# Docs / misc
+README.md
+PROJECT_REPORT.md
+future-fix.txt
+snapshots
+brain
+
+# Docker files (not needed inside the container itself)
+Dockerfile
+docker-entrypoint.sh
+.dockerignore
+render.yaml
+vercel.json
+.vercel
