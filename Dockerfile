@@ -20,7 +20,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 
 # Install and enable MongoDB extension (CRITICAL for JanBhasha NoSQL backend!)
 # Using install-php-extensions to avoid pecl build timeouts/OOM on Render free tier
-ADD https://github.com/mlocati/php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/install-php-extensions && install-php-extensions mongodb
 
 # Enable Apache mod_rewrite for Laravel routing
