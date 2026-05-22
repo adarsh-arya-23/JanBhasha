@@ -38,9 +38,10 @@ future-fix.txt
 snapshots
 brain
 
-# Docker files (not needed inside the container itself)
+# Docker build/deployment config (not needed inside the container itself)
+# NOTE: docker-entrypoint.sh is intentionally NOT listed here — it must be
+# present in the build context so the Dockerfile can COPY it in.
 Dockerfile
-docker-entrypoint.sh
 .dockerignore
 render.yaml
 vercel.json
