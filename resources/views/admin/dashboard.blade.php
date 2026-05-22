@@ -1,17 +1,17 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">Admin Dashboard</x-slot>
 
     <div class="fade-in space-y-6">
 
         {{-- Welcome Banner --}}
         <div class="card overflow-hidden">
-            <div class="flex items-center" style="background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);">
+            <div class="flex items-center" style="background: linear-gradient(135deg, #7f1d1d 0%, #ef4444 100%);">
                 <div class="p-8 flex-1 text-white">
                     <div class="flex items-center gap-3 mb-2">
                         <span class="text-2xl"><i class="fas fa-bolt"></i></span>
                         <h2 class="text-2xl font-bold">Super Admin Control Centre</h2>
                     </div>
-                    <p class="text-blue-200 text-sm">Full system access — manage organisations, users, translations, and API keys.</p>
+                    <p class="text-red-200 text-sm">Full system access — manage organisations, users, translations, and API keys.</p>
                     <div class="flex gap-3 mt-5">
                         <a href="{{ route('admin.organisations.create') }}" class="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-4 py-2 rounded-lg text-sm transition-all">
                             <i class="fas fa-building"></i> New Organisation
@@ -45,7 +45,7 @@
             </div>
             <div class="stat-card p-5">
                 <div class="flex items-start justify-between mb-3">
-                    <div class="text-2xl text-blue-600"><i class="fas fa-file-alt"></i></div>
+                    <div class="text-2xl text-red-600"><i class="fas fa-file-alt"></i></div>
                     <span class="badge badge-warning">This month: {{ number_format($stats['this_month']) }}</span>
                 </div>
                 <div class="text-3xl font-extrabold text-gray-900">{{ number_format($stats['total_translations']) }}</div>
@@ -66,7 +66,7 @@
             <div class="card overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                     <h3 class="font-semibold text-gray-800">Recent Organisations</h3>
-                    <a href="{{ route('admin.organisations.index') }}" class="text-sm text-blue-600 hover:underline">View all →</a>
+                    <a href="{{ route('admin.organisations.index') }}" class="text-sm text-red-600 hover:underline">View all →</a>
                 </div>
                 @if($recentOrgs->isEmpty())
                 <div class="px-6 py-10 text-center text-gray-400">No organisations yet.</div>
@@ -75,11 +75,11 @@
                     @foreach($recentOrgs as $org)
                     <div class="px-6 py-4 flex items-center gap-4 hover:bg-gray-50 transition-colors">
                         <div class="w-9 h-9 rounded-xl flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-                             style="background: linear-gradient(135deg, #1e3a8a, #2563eb);">
+                             style="background: linear-gradient(135deg, #7f1d1d, #ef4444);">
                             {{ strtoupper(substr($org->name, 0, 2)) }}
                         </div>
                         <div class="flex-1 min-w-0">
-                            <a href="{{ route('admin.organisations.show', $org) }}" class="font-medium text-gray-800 hover:text-blue-600 transition-colors block truncate">
+                            <a href="{{ route('admin.organisations.show', $org) }}" class="font-medium text-gray-800 hover:text-red-600 transition-colors block truncate">
                                 {{ $org->name }}
                             </a>
                             <div class="text-xs text-gray-400">{{ $org->users_count }} users · {{ number_format($org->translations_count) }} translations</div>
@@ -136,31 +136,31 @@
             <a href="{{ route('admin.organisations.index') }}" class="card p-5 flex items-center gap-4 hover:shadow-lg transition-all group">
                 <div class="text-3xl text-purple-600"><i class="fas fa-building"></i></div>
                 <div>
-                    <div class="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">Organisations</div>
+                    <div class="font-semibold text-gray-800 group-hover:text-red-600 transition-colors">Organisations</div>
                     <div class="text-xs text-gray-400">Manage all orgs</div>
                 </div>
             </a>
             <a href="{{ route('admin.users.index') }}" class="card p-5 flex items-center gap-4 hover:shadow-lg transition-all group">
                 <div class="text-3xl text-indigo-600"><i class="fas fa-users"></i></div>
                 <div>
-                    <div class="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">Users</div>
+                    <div class="font-semibold text-gray-800 group-hover:text-red-600 transition-colors">Users</div>
                     <div class="text-xs text-gray-400">Manage all users</div>
                 </div>
             </a>
             <a href="{{ route('translations.index') }}" class="card p-5 flex items-center gap-4 hover:shadow-lg transition-all group">
-                <div class="text-3xl text-blue-600"><i class="fas fa-clipboard"></i></div>
+                <div class="text-3xl text-red-600"><i class="fas fa-clipboard"></i></div>
                 <div>
-                    <div class="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">Translations</div>
+                    <div class="font-semibold text-gray-800 group-hover:text-red-600 transition-colors">Translations</div>
                     <div class="text-xs text-gray-400">Translation history</div>
                 </div>
             </a>
             <a href="{{ route('glossary.index') }}" class="card p-5 flex items-center gap-4 hover:shadow-lg transition-all group">
                 <div class="text-3xl text-amber-600"><i class="fas fa-book"></i></div>
                 <div>
-                    <div class="font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">Glossary</div>
+                    <div class="font-semibold text-gray-800 group-hover:text-red-600 transition-colors">Glossary</div>
                     <div class="text-xs text-gray-400">Term management</div>
                 </div>
             </a>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>
