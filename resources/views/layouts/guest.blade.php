@@ -85,7 +85,18 @@
             ← Home
         </a>
         <button onclick="toggleTheme()" class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center hover:border-blue-500 transition-all group" title="Switch Mode">
-            <span id="theme-icon" class="text-lg group-hover:scale-110 transition-transform">🌓</span>
+            <svg id="theme-icon" class="w-5 h-5 text-slate-300 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path class="icon-moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                <circle class="icon-sun" cx="12" cy="12" r="5" style="display:none" />
+                <line class="icon-sun" x1="12" y1="1" x2="12" y2="3" style="display:none;stroke-width:1.5" />
+                <line class="icon-sun" x1="12" y1="21" x2="12" y2="23" style="display:none;stroke-width:1.5" />
+                <line class="icon-sun" x1="4.22" y1="4.22" x2="5.64" y2="5.64" style="display:none;stroke-width:1.5" />
+                <line class="icon-sun" x1="18.36" y1="18.36" x2="19.78" y2="19.78" style="display:none;stroke-width:1.5" />
+                <line class="icon-sun" x1="1" y1="12" x2="3" y2="12" style="display:none;stroke-width:1.5" />
+                <line class="icon-sun" x1="21" y1="12" x2="23" y2="12" style="display:none;stroke-width:1.5" />
+                <line class="icon-sun" x1="4.22" y1="19.78" x2="5.64" y2="18.36" style="display:none;stroke-width:1.5" />
+                <line class="icon-sun" x1="18.36" y1="5.64" x2="19.78" y2="4.22" style="display:none;stroke-width:1.5" />
+            </svg>
         </button>
     </div>
 
@@ -116,10 +127,14 @@
     <script>
         function toggleTheme() {
             const body = document.body;
-            const icon = document.getElementById('theme-icon');
             const isLight = body.classList.toggle('light-mode');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            if (icon) icon.textContent = isLight ? '☀️' : '🌓';
+            
+            // Update SVG icons
+            const moonIcon = document.querySelector('#theme-icon .icon-moon');
+            const sunIcons = document.querySelectorAll('#theme-icon .icon-sun');
+            if (moonIcon) moonIcon.style.display = isLight ? 'none' : 'block';
+            if (sunIcons) sunIcons.forEach(icon => icon.style.display = isLight ? 'block' : 'none');
         }
 
         (function() {
@@ -127,14 +142,18 @@
             if (savedTheme === 'light') {
                 document.body.classList.add('light-mode');
                 document.addEventListener('DOMContentLoaded', () => {
-                    const icon = document.getElementById('theme-icon');
-                    if (icon) icon.textContent = '☀️';
+                    const moonIcon = document.querySelector('#theme-icon .icon-moon');
+                    const sunIcons = document.querySelectorAll('#theme-icon .icon-sun');
+                    if (moonIcon) moonIcon.style.display = 'none';
+                    if (sunIcons) sunIcons.forEach(icon => icon.style.display = 'block');
                 });
             } else {
                 document.body.classList.remove('light-mode');
                 document.addEventListener('DOMContentLoaded', () => {
-                    const icon = document.getElementById('theme-icon');
-                    if (icon) icon.textContent = '🌓';
+                    const moonIcon = document.querySelector('#theme-icon .icon-moon');
+                    const sunIcons = document.querySelectorAll('#theme-icon .icon-sun');
+                    if (moonIcon) moonIcon.style.display = 'block';
+                    if (sunIcons) sunIcons.forEach(icon => icon.style.display = 'none');
                 });
             }
         })();
