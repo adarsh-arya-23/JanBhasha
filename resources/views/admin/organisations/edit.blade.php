@@ -1,9 +1,9 @@
-<x-admin-layout>
+<x-app-layout>
     <x-slot name="header">Admin — Edit {{ $organisation->name }}</x-slot>
 
     <div class="max-w-2xl fade-in">
         <div class="mb-6">
-            <a href="{{ route('admin.organisations.show', $organisation) }}" class="text-sm text-red-600 hover:underline inline-flex items-center gap-1">
+            <a href="{{ route('admin.organisations.show', $organisation) }}" class="text-sm text-blue-600 hover:underline inline-flex items-center gap-1">
                 ← Back to {{ $organisation->name }}
             </a>
         </div>
@@ -11,7 +11,7 @@
         <div class="card overflow-hidden">
             <div class="px-6 py-5 border-b border-gray-100" style="background: linear-gradient(135deg, #1e3a8a, #2563eb);">
                 <h2 class="text-lg font-bold text-white">Edit Organisation</h2>
-                <p class="text-red-200 text-sm mt-0.5">Update details for {{ $organisation->name }}.</p>
+                <p class="text-blue-200 text-sm mt-0.5">Update details for {{ $organisation->name }}.</p>
             </div>
 
             <form method="POST" action="{{ route('admin.organisations.update', $organisation) }}" class="p-6 space-y-5">
@@ -61,7 +61,7 @@
                 <div class="flex items-center gap-3 p-4 rounded-xl bg-gray-50 border border-gray-100">
                     <input type="checkbox" id="is_active" name="is_active" value="1"
                            {{ old('is_active', $organisation->is_active) ? 'checked' : '' }}
-                           class="w-4 h-4 rounded text-red-600">
+                           class="w-4 h-4 rounded text-blue-600">
                     <label for="is_active" class="text-sm font-medium text-gray-700">
                         Active — Allow this organisation to use the JanBhasha API
                     </label>
@@ -76,4 +76,4 @@
             </form>
         </div>
     </div>
-</x-admin-layout>
+</x-app-layout>

@@ -8,9 +8,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TranslationController;
 use Illuminate\Support\Facades\Route;
 
-// ─────────────────────────────────────
+// ──────────────────────────────────────────
 // Public routes
-// ─────────────────────────────────────
+// ──────────────────────────────────────────
 
 Route::get('/', function () {
     if (auth()->check()) {
@@ -58,9 +58,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('glossary', GlossaryController::class)
         ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
 
-    // ─────────────────────────────────────
+    // ──────────────────────────────────────────
     // Super-admin panel
-    // ─────────────────────────────────────
+    // ──────────────────────────────────────────
     Route::prefix('admin')->name('admin.')->group(function () {
 
         // Admin Dashboard

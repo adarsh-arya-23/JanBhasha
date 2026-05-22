@@ -1,4 +1,4 @@
-<x-admin-layout>
+<x-app-layout>
     <x-slot name="header">Admin — Organisations</x-slot>
 
     <div class="fade-in">
@@ -29,7 +29,7 @@
                 <div class="text-sm text-gray-500 mt-1">Deactivated</div>
             </div>
             <div class="stat-card p-5">
-                <div class="text-3xl font-extrabold text-red-600">{{ $organisations->sum('users_count') }}</div>
+                <div class="text-3xl font-extrabold text-blue-600">{{ $organisations->sum('users_count') }}</div>
                 <div class="text-sm text-gray-500 mt-1">Total Users</div>
             </div>
         </div>
@@ -70,7 +70,7 @@
                                         {{ strtoupper(substr($org->name, 0, 2)) }}
                                     </div>
                                     <div>
-                                        <a href="{{ route('admin.organisations.show', $org) }}" class="font-semibold text-gray-800 hover:text-red-600 transition-colors">
+                                        <a href="{{ route('admin.organisations.show', $org) }}" class="font-semibold text-gray-800 hover:text-blue-600 transition-colors">
                                             {{ $org->name }}
                                         </a>
                                         <div class="text-xs text-gray-400 mt-0.5">{{ $org->email }}</div>
@@ -92,7 +92,7 @@
                             <td class="px-6 py-4 text-gray-400 whitespace-nowrap">{{ $org->created_at->format('d M Y') }}</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
-                                    <a href="{{ route('admin.organisations.show', $org) }}" class="text-red-600 hover:text-red-800 font-medium text-xs">View</a>
+                                    <a href="{{ route('admin.organisations.show', $org) }}" class="text-blue-600 hover:text-blue-800 font-medium text-xs">View</a>
                                     @if(!$org->trashed())
                                     <span class="text-gray-200">|</span>
                                     <a href="{{ route('admin.organisations.edit', $org) }}" class="text-amber-600 hover:text-amber-800 font-medium text-xs">Edit</a>
@@ -117,4 +117,4 @@
             @endif
         </div>
     </div>
-</x-admin-layout>
+</x-app-layout>

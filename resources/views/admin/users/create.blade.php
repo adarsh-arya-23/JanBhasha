@@ -1,9 +1,9 @@
-<x-admin-layout>
+<x-app-layout>
     <x-slot name="header">Admin — Create User</x-slot>
 
     <div class="max-w-2xl fade-in">
         <div class="mb-6">
-            <a href="{{ route('admin.users.index') }}" class="text-sm text-red-600 hover:underline inline-flex items-center gap-1">
+            <a href="{{ route('admin.users.index') }}" class="text-sm text-blue-600 hover:underline inline-flex items-center gap-1">
                 ← Back to Users
             </a>
         </div>
@@ -96,4 +96,4 @@
             </form>
         </div>
     </div>
-</x-admin-layout>
+</x-app-layout>

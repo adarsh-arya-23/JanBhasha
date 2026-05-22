@@ -1,9 +1,9 @@
-<x-admin-layout>
+<x-app-layout>
     <x-slot name="header">Admin — {{ $organisation->name }}</x-slot>
 
     <div class="max-w-5xl space-y-6 fade-in">
         <div class="flex items-center justify-between">
-            <a href="{{ route('admin.organisations.index') }}" class="text-sm text-red-600 hover:underline inline-flex items-center gap-1">
+            <a href="{{ route('admin.organisations.index') }}" class="text-sm text-blue-600 hover:underline inline-flex items-center gap-1">
                 ← Back to Organisations
             </a>
             <div class="flex gap-2">
@@ -43,9 +43,9 @@
                             @endif
                         </div>
                         @if($organisation->department)
-                        <p class="text-red-200 mt-1">{{ $organisation->department }}</p>
+                        <p class="text-blue-200 mt-1">{{ $organisation->department }}</p>
                         @endif
-                        <div class="flex flex-wrap gap-4 mt-3 text-sm text-red-200">
+                        <div class="flex flex-wrap gap-4 mt-3 text-sm text-blue-200">
                             @if($organisation->email)
                             <span>📧 {{ $organisation->email }}</span>
                             @endif
@@ -148,7 +148,7 @@
         <div class="card overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
                 <h3 class="font-semibold text-gray-800">Team Members</h3>
-                <a href="{{ route('admin.users.index') }}?organisation={{ $organisation->id }}" class="text-sm text-red-600 hover:underline">Manage Users →</a>
+                <a href="{{ route('admin.users.index') }}?organisation={{ $organisation->id }}" class="text-sm text-blue-600 hover:underline">Manage Users →</a>
             </div>
             @if($organisation->users->isEmpty())
             <div class="px-6 py-10 text-center text-gray-400">No users in this organisation.</div>
@@ -156,7 +156,7 @@
             <div class="divide-y divide-gray-50">
                 @foreach($organisation->users as $user)
                 <div class="px-6 py-4 flex items-center gap-4">
-                    <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-sm">
+                    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-sm">
                         {{ strtoupper(substr($user->name, 0, 1)) }}
                     </div>
                     <div class="flex-1 min-w-0">
@@ -183,4 +183,4 @@
             });
         }
     </script>
-</x-admin-layout>
+</x-app-layout>
