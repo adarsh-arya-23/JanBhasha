@@ -1,9 +1,9 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">Admin — Create Organisation</x-slot>
 
     <div class="max-w-2xl fade-in">
         <div class="mb-6">
-            <a href="{{ route('admin.organisations.index') }}" class="text-sm text-blue-600 hover:underline inline-flex items-center gap-1">
+            <a href="{{ route('admin.organisations.index') }}" class="text-sm text-red-600 hover:underline inline-flex items-center gap-1">
                 ← Back to Organisations
             </a>
         </div>
@@ -11,7 +11,7 @@
         <div class="card overflow-hidden">
             <div class="px-6 py-5 border-b border-gray-100" style="background: linear-gradient(135deg, #1e3a8a, #2563eb);">
                 <h2 class="text-lg font-bold text-white">New Organisation</h2>
-                <p class="text-blue-200 text-sm mt-0.5">Register a government department or ministry on JanBhasha.</p>
+                <p class="text-red-200 text-sm mt-0.5">Register a government department or ministry on JanBhasha.</p>
             </div>
 
             <form method="POST" action="{{ route('admin.organisations.store') }}" class="p-6 space-y-5">
@@ -65,7 +65,7 @@
                 <div class="flex items-center gap-3 p-4 rounded-xl bg-gray-50 border border-gray-100">
                     <input type="checkbox" id="is_active" name="is_active" value="1"
                            {{ old('is_active', '1') ? 'checked' : '' }}
-                           class="w-4 h-4 rounded text-blue-600">
+                           class="w-4 h-4 rounded text-red-600">
                     <label for="is_active" class="text-sm font-medium text-gray-700">
                         Active — Allow this organisation to use the JanBhasha API
                     </label>
@@ -81,11 +81,11 @@
             </form>
         </div>
 
-        <div class="mt-4 p-4 rounded-xl bg-blue-50 border border-blue-100">
+        <div class="mt-4 p-4 rounded-xl bg-red-50 border border-red-100">
             <div class="flex items-start gap-2">
-                <span class="text-blue-500">ℹ️</span>
-                <p class="text-sm text-blue-700">An API key will be automatically generated for the new organisation. Share it securely with the organisation's technical team.</p>
+                <span class="text-red-500">ℹ️</span>
+                <p class="text-sm text-red-700">An API key will be automatically generated for the new organisation. Share it securely with the organisation's technical team.</p>
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>
