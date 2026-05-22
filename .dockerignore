@@ -14,10 +14,9 @@
 # PHP dependencies — installed inside container via composer
 vendor
 
-# Node dependencies & source assets — compiled in Stage 1, not needed in Stage 2
+# Node dependencies — installed inside Stage 1 via npm ci
+# DO NOT exclude resources/js or resources/css — they are needed by the node_builder stage
 node_modules
-resources/js
-resources/css
 
 # Laravel runtime directories — generated at runtime
 bootstrap/cache/*
