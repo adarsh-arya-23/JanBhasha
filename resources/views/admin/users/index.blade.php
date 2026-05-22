@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">Admin — Users</x-slot>
 
     <div class="fade-in">
@@ -57,7 +57,7 @@
                                 <div class="flex items-center gap-3">
                                     <a href="{{ route('admin.users.edit', $user) }}"
                                        class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 ring-2
-                                              {{ $user->isSuperAdmin() ? 'ring-purple-500/40' : ($user->isAdmin() ? 'ring-amber-500/40' : 'ring-blue-500/40') }}
+                                              {{ $user->isSuperAdmin() ? 'ring-purple-500/40' : ($user->isAdmin() ? 'ring-amber-500/40' : 'ring-red-500/40') }}
                                               hover:ring-opacity-100 transition-all"
                                        title="View {{ $user->name }}">
                                         <img src="{{ $user->avatarUrl() }}"
@@ -72,7 +72,7 @@
                             </td>
                             <td class="px-6 py-4 text-gray-500">
                                 @if($user->organisation)
-                                    <a href="{{ route('admin.organisations.show', $user->organisation) }}" class="hover:text-blue-600 transition-colors">
+                                    <a href="{{ route('admin.organisations.show', $user->organisation) }}" class="hover:text-red-600 transition-colors">
                                         {{ $user->organisation->name }}
                                     </a>
                                 @else
@@ -111,4 +111,4 @@
             @endif
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>
