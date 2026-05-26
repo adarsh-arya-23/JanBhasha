@@ -14,48 +14,95 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-    <style>
         /* ── Dynamic Route-based Theme Variables ── */
         :root {
-            @if(request()->routeIs('admin.*'))
-                /* Admin Panel - Vibrant Bright Red Theme */
+            @if(auth()->check() && auth()->user()->isAdmin())
+                /* Admin Panel - Vibrant Light Red Theme */
                 --brand-primary: #ff4757;
                 --brand-primary-hover: #ff6b81;
                 --brand-shadow: rgba(255, 71, 87, 0.35);
                 --brand-shadow-hover: rgba(255, 71, 87, 0.5);
-                --sidebar-bg: #ff4757;
-                --sidebar-border: #e03b4b;
+                --sidebar-bg: rgba(15, 23, 42, 0.45); /* Base slate transparent */
+                --sidebar-backdrop-bg: rgba(255, 71, 87, 0.12); /* Frosty red tint */
+                --sidebar-border: rgba(255, 71, 87, 0.25);
+                --sidebar-text: rgba(255, 255, 255, 0.8);
+                --sidebar-text-hover: #ffffff;
                 --sidebar-text-accent: #ffccd5;
+                --nav-hover-bg: rgba(255, 255, 255, 0.1);
                 --nav-active-bg: #ffffff;
                 --nav-active-text: #ff4757;
-                --nav-active-border: #e03b4b;
+                --nav-active-border: #ff4757;
                 --header-border: rgba(255, 71, 87, 0.15);
+                --glow-primary: rgba(255, 71, 87, 0.18);
+                --glow-secondary: rgba(255, 107, 129, 0.08);
             @else
-                /* User Panel - Premium Royal Blue Theme */
-                --brand-primary: #2563eb;
-                --brand-primary-hover: #1d4ed8;
-                --brand-shadow: rgba(37, 99, 235, 0.35);
-                --brand-shadow-hover: rgba(37, 99, 235, 0.5);
-                --sidebar-bg: linear-gradient(180deg, #0f172a 0%, #0f1f3d 100%);
-                --sidebar-border: rgba(37, 99, 235, 0.2);
-                --sidebar-text-accent: #60a5fa;
-                --nav-active-bg: rgba(37, 99, 235, 0.25);
-                --nav-active-text: #60a5fa;
-                --nav-active-border: #3b82f6;
-                --header-border: rgba(37, 99, 235, 0.15);
+                /* User Panel - Premium Light Blue Theme */
+                --brand-primary: #0ea5e9;
+                --brand-primary-hover: #38bdf8;
+                --brand-shadow: rgba(14, 165, 233, 0.35);
+                --brand-shadow-hover: rgba(14, 165, 233, 0.5);
+                --sidebar-bg: rgba(15, 23, 42, 0.45); /* Base slate transparent */
+                --sidebar-backdrop-bg: rgba(14, 165, 233, 0.12); /* Frosty blue tint */
+                --sidebar-border: rgba(14, 165, 233, 0.25);
+                --sidebar-text: rgba(255, 255, 255, 0.8);
+                --sidebar-text-hover: #ffffff;
+                --sidebar-text-accent: #e0f2fe;
+                --nav-hover-bg: rgba(255, 255, 255, 0.1);
+                --nav-active-bg: #ffffff;
+                --nav-active-text: #0ea5e9;
+                --nav-active-border: #0ea5e9;
+                --header-border: rgba(14, 165, 233, 0.15);
+                --glow-primary: rgba(14, 165, 233, 0.18);
+                --glow-secondary: rgba(56, 189, 248, 0.08);
             @endif
         }
 
         * { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #0b1120; color: #e2e8f0; }
+        body { font-family: 'Inter', sans-serif; background: #0b1120; color: #e2e8f0; position: relative; }
+
+        /* ── Background Glow Blobs for Glassmorphism ── */
+        .glow-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.85;
+            transition: all 0.5s ease;
+        }
+        .glow-1 {
+            top: -10%;
+            left: -10%;
+            width: 45%;
+            height: 45%;
+            background: radial-gradient(circle, var(--glow-primary) 0%, rgba(0,0,0,0) 70%);
+        }
+        .glow-2 {
+            bottom: -5%;
+            left: -5%;
+            width: 35%;
+            height: 35%;
+            background: radial-gradient(circle, var(--glow-secondary) 0%, rgba(0,0,0,0) 70%);
+        }
 
         /* ── Sidebar ── */
         .sidebar {
-            background: var(--sidebar-bg) !important;
+            position: relative;
+            z-index: 10;
+            background: linear-gradient(135deg, var(--sidebar-bg), var(--sidebar-backdrop-bg)) !important;
+            backdrop-filter: blur(24px) saturate(160%) !important;
+            -webkit-backdrop-filter: blur(24px) saturate(160%) !important;
             border-right: 1px solid var(--sidebar-border) !important;
         }
-        .nav-link { border-radius: 10px; transition: all .18s; color: rgba(255, 255, 255, 0.8) !important; }
-        .nav-link:hover { background: rgba(255, 255, 255, 0.12) !important; color: #ffffff !important; }
+        .nav-link { 
+            border-radius: 10px; 
+            transition: all .18s; 
+            color: var(--sidebar-text) !important; 
+        }
+        .nav-link:hover { 
+            background: var(--nav-hover-bg) !important; 
+            color: var(--sidebar-text-hover) !important; 
+        }
         .nav-link.active { 
             background: var(--nav-active-bg) !important; 
             color: var(--nav-active-text) !important; 
@@ -65,6 +112,22 @@
         }
         .sidebar .text-xs,
         .sidebar .text-blue-400 { color: var(--sidebar-text-accent) !important; }
+        
+        .sidebar-divider {
+            border-color: var(--sidebar-border) !important;
+        }
+        .sidebar-org-badge {
+            background: var(--nav-hover-bg) !important;
+            border: 1px solid var(--sidebar-border) !important;
+        }
+        .sidebar-org-title {
+            color: var(--sidebar-text-accent) !important;
+        }
+        .sidebar-section-title {
+            color: var(--sidebar-text-accent) !important;
+            opacity: 0.95;
+            font-weight: 600 !important;
+        }
 
         /* ── Header ── */
         header { background: rgba(11,17,32,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--header-border); }
@@ -160,20 +223,49 @@
         }
 
         /* ── Light Mode Overrides ── */
-        body.light-mode { background: #f8fafc; color: #1e293b; }
+        body.light-mode { 
+            background: #f8fafc; 
+            color: #1e293b; 
+            @if(auth()->check() && auth()->user()->isAdmin())
+                /* Admin Panel - Vibrant Light Red Theme overrides for Light Mode */
+                --sidebar-bg: rgba(255, 255, 255, 0.6);
+                --sidebar-backdrop-bg: rgba(255, 71, 87, 0.14); /* Frosty light red */
+                --sidebar-border: rgba(255, 71, 87, 0.22);
+                --sidebar-text: #475569;
+                --sidebar-text-hover: #0f172a;
+                --sidebar-text-accent: #dc2626;
+                --nav-hover-bg: rgba(255, 71, 87, 0.08);
+                --nav-active-bg: #ff4757;
+                --nav-active-text: #ffffff;
+                --nav-active-border: #ffffff;
+                --glow-primary: rgba(255, 71, 87, 0.12);
+                --glow-secondary: rgba(255, 107, 129, 0.06);
+            @else
+                /* User Panel - Premium Light Blue Theme overrides for Light Mode */
+                --sidebar-bg: rgba(255, 255, 255, 0.6);
+                --sidebar-backdrop-bg: rgba(14, 165, 233, 0.14); /* Frosty light blue */
+                --sidebar-border: rgba(14, 165, 233, 0.22);
+                --sidebar-text: #475569;
+                --sidebar-text-hover: #0f172a;
+                --sidebar-text-accent: #0284c7;
+                --nav-hover-bg: rgba(14, 165, 233, 0.08);
+                --nav-active-bg: #0ea5e9;
+                --nav-active-text: #ffffff;
+                --nav-active-border: #ffffff;
+                --glow-primary: rgba(14, 165, 233, 0.12);
+                --glow-secondary: rgba(56, 189, 248, 0.06);
+            @endif
+        }
         body.light-mode header { background: rgba(248,250,252,0.95); border-bottom: 1px solid #e2e8f0; }
         body.light-mode header h1 { color: #1e293b !important; }
         body.light-mode .stat-card, body.light-mode .card { background: white; border: 1px solid #cbd5e1; box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
-        body.light-mode .sidebar { background: var(--sidebar-bg) !important; border-right: 1px solid var(--sidebar-border) !important; }
-        @if(!request()->routeIs('admin.*'))
-            body.light-mode .sidebar .nav-link { color: #475569 !important; }
-            body.light-mode .sidebar .nav-link:hover { background: #e2e8f0 !important; color: #1e293b !important; }
-            body.light-mode .sidebar .nav-link.active { background: #dbeafe !important; color: #1d4ed8 !important; border-left: 4px solid #3b82f6 !important; }
-        @else
-            body.light-mode .sidebar .nav-link { color: rgba(255, 255, 255, 0.85) !important; }
-            body.light-mode .sidebar .nav-link:hover { background: rgba(255, 255, 255, 0.15) !important; color: #ffffff !important; }
-            body.light-mode .sidebar .nav-link.active { background: #ffffff !important; color: #ff4757 !important; border-left: 4px solid #e03b4b !important; }
-        @endif
+        body.light-mode .sidebar { 
+            background: linear-gradient(135deg, var(--sidebar-bg), var(--sidebar-backdrop-bg)) !important; 
+            border-right: 1px solid var(--sidebar-border) !important; 
+        }
+        body.light-mode .sidebar .nav-link { color: var(--sidebar-text) !important; }
+        body.light-mode .sidebar .nav-link:hover { background: var(--nav-hover-bg) !important; color: var(--sidebar-text-hover) !important; }
+        body.light-mode .sidebar .nav-link.active { background: var(--nav-active-bg) !important; color: var(--nav-active-text) !important; border-left: 4px solid var(--nav-active-border) !important; }
         body.light-mode .input-field { background: white; border-color: #cbd5e1; color: #1e293b; }
         body.light-mode .input-field::placeholder { color: #94a3b8; }
         body.light-mode .translation-box { background: #f8fafc; border-color: #cbd5e1; color: #1e293b; }
@@ -197,17 +289,10 @@
         body.light-mode .badge-success { color: #065f46 !important; background: #d1fae5 !important; border-color: #a7f3d0 !important; }
         body.light-mode .badge-error { color: #991b1b !important; background: #fee2e2 !important; border-color: #fecaca !important; }
         body.light-mode .badge-warning { color: #92400e !important; background: #fef3c7 !important; border-color: #fde68a !important; }
-        @if(request()->routeIs('admin.*'))
-            body.light-mode .sidebar .text-slate-200,
-            body.light-mode .sidebar .text-white { color: #ffffff !important; }
-            body.light-mode .sidebar .text-xs,
-            body.light-mode .sidebar .text-blue-400 { color: #ffccd5 !important; }
-        @else
-            body.light-mode .sidebar .text-slate-200,
-            body.light-mode .sidebar .text-white { color: #0f172a !important; }
-            body.light-mode .sidebar .text-xs,
-            body.light-mode .sidebar .text-blue-400 { color: #475569 !important; }
-        @endif
+        body.light-mode .sidebar .text-slate-200,
+        body.light-mode .sidebar .text-white { color: var(--sidebar-text-hover) !important; }
+        body.light-mode .sidebar .text-xs,
+        body.light-mode .sidebar .text-blue-400 { color: var(--sidebar-text-accent) !important; }
         .logo-icon { color: white !important; }
 
         /* ── Floating Finance News Widget ── */
@@ -391,6 +476,20 @@
         body.light-mode #chatbot-panel .border-blue-900\/40 {
             border-color: #e2e8f0 !important;
         }
+        /* Quick-reply chip buttons */
+        body.light-mode #chat-messages button.bg-blue-900\/40,
+        body.light-mode #chat-messages button[class*="bg-blue-900"] {
+            background: #eff6ff !important;
+            border-color: #bfdbfe !important;
+            color: #1e40af !important;
+            font-weight: 600 !important;
+        }
+        body.light-mode #chat-messages button.bg-blue-900\/40:hover,
+        body.light-mode #chat-messages button[class*="bg-blue-900"]:hover {
+            background: #dbeafe !important;
+            border-color: #93c5fd !important;
+            color: #1d4ed8 !important;
+        }
         /* Contact pane background */
         body.light-mode #contact-pane {
             background: #ffffff;
@@ -439,14 +538,18 @@
     </style>
 </head>
 <body class="h-full font-sans antialiased">
-<div class="flex h-screen overflow-hidden">
+    <!-- Background Glows for glassmorphism -->
+    <div class="glow-blob glow-1"></div>
+    <div class="glow-blob glow-2"></div>
+
+<div class="flex h-screen overflow-hidden relative z-10">
     <!-- Mobile sidebar overlay -->
     <div id="mobile-sidebar-overlay" onclick="toggleSidebar()"></div>
 
     {{-- ── Sidebar ────────────────────────────── --}}
     <aside class="sidebar w-60 flex-shrink-0 flex flex-col" id="sidebar">
         {{-- Logo --}}
-        <a href="{{ route('dashboard') }}" class="px-5 py-5 flex items-center gap-3 border-b border-blue-900/30 hover:bg-white/5 transition-colors group">
+        <a href="{{ route('dashboard') }}" class="px-5 py-5 flex items-center gap-3 border-b sidebar-divider hover:bg-white/5 transition-colors group">
             <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-blue-900 flex items-center justify-center text-lg shadow-lg group-hover:scale-110 transition-transform logo-icon">🇮🇳</div>
             <div>
                 <div class="font-bold text-white leading-tight">JanBhasha</div>
@@ -457,8 +560,8 @@
         {{-- Org badge --}}
         @auth
         @if(auth()->user()->organisation)
-        <div class="mx-3 mt-4 mb-1 bg-blue-900/20 border border-blue-800/30 rounded-xl px-4 py-2.5">
-            <div class="text-xs text-blue-500 uppercase tracking-wide font-medium mb-0.5">Organisation</div>
+        <div class="mx-3 mt-4 mb-1 sidebar-org-badge rounded-xl px-4 py-2.5">
+            <div class="text-xs sidebar-org-title uppercase tracking-wide font-medium mb-0.5">Organisation</div>
             <div class="font-semibold text-sm text-slate-200 leading-tight truncate">{{ auth()->user()->organisation->name }}</div>
         </div>
         @endif
@@ -484,7 +587,7 @@
 
             @auth
             @if(auth()->user()->isAdmin())
-            <div class="pt-4 pb-1 px-4 text-xs text-blue-500 uppercase tracking-wide font-semibold">Admin</div>
+            <div class="pt-4 pb-1 px-4 text-xs sidebar-section-title uppercase tracking-wide font-semibold">Admin</div>
             <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 text-sm">
                 <span>🎛️</span> Admin Panel
             </a>
@@ -502,7 +605,7 @@
 
         {{-- User footer --}}
         @auth
-        <div class="border-t border-blue-900/30 px-3 py-3">
+        <div class="border-t sidebar-divider px-3 py-3">
             <div class="flex items-center gap-3 px-2">
                 <a href="{{ route('profile.edit') }}" class="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 hover:ring-2 hover:ring-orange-400 transition-all" title="Profile">
                     <img src="{{ auth()->user()->avatarUrl() }}" alt="{{ auth()->user()->name }}" class="w-full h-full object-cover">

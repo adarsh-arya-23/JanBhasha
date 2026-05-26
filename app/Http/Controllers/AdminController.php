@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\WelcomeMail;
 use Illuminate\Validation\Rules\Password;
 
 class AdminController extends Controller implements HasMiddleware
@@ -154,7 +156,10 @@ class AdminController extends Controller implements HasMiddleware
         }
 
         $data['password'] = Hash::make($data['password']);
-        User::create($data);
+        $user = User::create($data);
+
+        // Send welcome email to manually created user
+        Mail::to($user->email)->queue(new WelcomeMail($user));
 
         return redirect()->route('admin.users.index')
             ->with('success', "User '{$data['name']}' created successfully.");
