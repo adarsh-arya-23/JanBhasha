@@ -285,6 +285,102 @@
             background: rgba(245, 158, 11, 0.08);
             border-color: rgba(245, 158, 11, 0.3);
         }
+
+        /* ─── Light Mode: Chatbot & Contact Panel ─────────────────── */
+        body.light-mode #chatbot-panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+        }
+        /* Header bar */
+        body.light-mode #chatbot-panel .bg-blue-950\/40 {
+            background: #f1f5f9 !important;
+            border-bottom-color: #e2e8f0 !important;
+        }
+        body.light-mode #chatbot-panel .text-white {
+            color: #1e293b !important;
+        }
+        /* Tabs */
+        body.light-mode #tab-chat-btn,
+        body.light-mode #tab-contact-btn {
+            background: transparent !important;
+            color: #64748b !important;
+            border-bottom-color: transparent !important;
+        }
+        body.light-mode #tab-chat-btn.border-blue-500,
+        body.light-mode #tab-contact-btn.border-blue-500 {
+            color: #4f46e5 !important;
+            border-bottom-color: #4f46e5 !important;
+            background: #eff6ff !important;
+        }
+        /* Chat messages area */
+        body.light-mode #chat-pane {
+            background: #f8fafc;
+        }
+        body.light-mode .chat-msg-bot {
+            background: #e0e7ff !important;
+            color: #1e293b !important;
+        }
+        body.light-mode .chat-msg-user {
+            background: #4f46e5 !important;
+            color: #ffffff !important;
+        }
+        /* Chat input */
+        body.light-mode #chat-input {
+            background: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #1e293b !important;
+        }
+        body.light-mode #chat-input::placeholder { color: #94a3b8 !important; }
+        /* Separator border */
+        body.light-mode #chatbot-panel .border-blue-900\/40 {
+            border-color: #e2e8f0 !important;
+        }
+        /* Contact pane background */
+        body.light-mode #contact-pane {
+            background: #ffffff;
+        }
+        /* Contact form labels */
+        body.light-mode #contact-form label {
+            color: #374151 !important;
+        }
+        /* Contact form inputs & textarea */
+        body.light-mode #cf-name,
+        body.light-mode #cf-email,
+        body.light-mode #cf-subject,
+        body.light-mode #cf-reason {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+            color: #1e293b !important;
+        }
+        body.light-mode #cf-name::placeholder,
+        body.light-mode #cf-email::placeholder,
+        body.light-mode #cf-subject::placeholder,
+        body.light-mode #cf-reason::placeholder {
+            color: #94a3b8 !important;
+        }
+        body.light-mode #cf-name:focus,
+        body.light-mode #cf-email:focus,
+        body.light-mode #cf-subject:focus,
+        body.light-mode #cf-reason:focus {
+            border-color: #4f46e5 !important;
+            background: #ffffff !important;
+        }
+        /* Footer hint text */
+        body.light-mode #contact-form p.text-\\[10px\\],
+        body.light-mode #contact-form .text-slate-600 {
+            color: #94a3b8 !important;
+        }
+        /* Success screen */
+        body.light-mode #contact-success {
+            background: #ffffff;
+        }
+        body.light-mode #contact-success h3 {
+            color: #1e293b !important;
+        }
+        body.light-mode #contact-success p {
+            color: #64748b !important;
+        }
     </style>
 </head>
 <body class="h-full font-sans antialiased">
@@ -332,14 +428,16 @@
             </a>
 
             @auth
-            @if(auth()->user()->isSuperAdmin())
+            @if(auth()->user()->isAdmin())
             <div class="pt-4 pb-1 px-4 text-xs text-blue-500 uppercase tracking-wide font-semibold">Admin</div>
             <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 text-sm">
                 <span>🎛️</span> Admin Panel
             </a>
+            @if(auth()->user()->isSuperAdmin())
             <a href="{{ route('admin.organisations.index') }}" class="nav-link {{ request()->routeIs('admin.organisations.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 text-sm">
                 <span>🏛️</span> Organisations
             </a>
+            @endif
             <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }} flex items-center gap-3 px-4 py-2.5 text-sm">
                 <span>👥</span> Users
             </a>
@@ -461,6 +559,7 @@
 {{-- ── Floating Support Chatbot ── --}}
 <button id="chatbot-btn" title="Support & Help" onclick="toggleChat()">💬</button>
 <div id="chatbot-panel" class="hidden">
+    {{-- Header --}}
     <div class="px-5 py-4 border-b border-blue-900/40 flex items-center justify-between bg-blue-950/40">
         <div class="flex items-center gap-2.5">
             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-sm">🤖</div>
@@ -473,19 +572,103 @@
         </div>
         <button onclick="toggleChat()" class="text-slate-500 hover:text-slate-300 transition-colors">✕</button>
     </div>
-    <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3" style="min-height:280px;max-height:340px;">
-        <div class="chat-msg-bot">👋 Hi! I'm your JanBhasha guide. How can I help you today?</div>
-        <div class="flex flex-wrap gap-2 mt-1">
-            <button onclick="askBot('how to translate')" class="text-xs bg-blue-900/40 border border-blue-800/40 text-blue-300 rounded-full px-3 py-1 hover:bg-blue-800/40 transition-colors">How to translate?</button>
-            <button onclick="askBot('what is glossary')" class="text-xs bg-blue-900/40 border border-blue-800/40 text-blue-300 rounded-full px-3 py-1 hover:bg-blue-800/40 transition-colors">What is Glossary?</button>
-            <button onclick="askBot('api key')" class="text-xs bg-blue-900/40 border border-blue-800/40 text-blue-300 rounded-full px-3 py-1 hover:bg-blue-800/40 transition-colors">API Key?</button>
-            <button onclick="askBot('quota')" class="text-xs bg-blue-900/40 border border-blue-800/40 text-blue-300 rounded-full px-3 py-1 hover:bg-blue-800/40 transition-colors">About Quota?</button>
+
+    {{-- Tabs --}}
+    <div class="flex border-b border-blue-900/40">
+        <button id="tab-chat-btn" onclick="switchChatTab('chat')"
+            class="flex-1 py-2.5 text-xs font-semibold transition-colors border-b-2 border-blue-500 text-blue-400 bg-blue-950/30">
+            💬 Chat
+        </button>
+        <button id="tab-contact-btn" onclick="switchChatTab('contact')"
+            class="flex-1 py-2.5 text-xs font-semibold transition-colors border-b-2 border-transparent text-slate-500 hover:text-slate-300">
+            📬 Contact Us
+        </button>
+    </div>
+
+    {{-- CHAT PANE --}}
+    <div id="chat-pane">
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col gap-3" style="min-height:260px;max-height:310px;">
+            <div class="chat-msg-bot">👋 Hi! I'm your JanBhasha guide. How can I help you today?</div>
+            <div class="flex flex-wrap gap-2 mt-1">
+                <button onclick="askBot('how to translate')" class="text-xs bg-blue-900/40 border border-blue-800/40 text-blue-300 rounded-full px-3 py-1 hover:bg-blue-800/40 transition-colors">How to translate?</button>
+                <button onclick="askBot('what is glossary')" class="text-xs bg-blue-900/40 border border-blue-800/40 text-blue-300 rounded-full px-3 py-1 hover:bg-blue-800/40 transition-colors">What is Glossary?</button>
+                <button onclick="askBot('api key')" class="text-xs bg-blue-900/40 border border-blue-800/40 text-blue-300 rounded-full px-3 py-1 hover:bg-blue-800/40 transition-colors">API Key?</button>
+                <button onclick="askBot('quota')" class="text-xs bg-blue-900/40 border border-blue-800/40 text-blue-300 rounded-full px-3 py-1 hover:bg-blue-800/40 transition-colors">About Quota?</button>
+            </div>
+        </div>
+        <div class="p-3 border-t border-blue-900/40">
+            <form onsubmit="sendChat(event)" class="flex gap-2">
+                <input id="chat-input" type="text" placeholder="Ask a question..." class="flex-1 bg-blue-900/20 border border-blue-800/30 rounded-xl px-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500">
+                <button type="submit" class="w-9 h-9 rounded-xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center text-white text-sm transition-colors">→</button>
+            </form>
         </div>
     </div>
-    <div class="p-3 border-t border-blue-900/40">
-        <form onsubmit="sendChat(event)" class="flex gap-2">
-            <input id="chat-input" type="text" placeholder="Ask a question..." class="flex-1 bg-blue-900/20 border border-blue-800/30 rounded-xl px-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500">
-            <button type="submit" class="w-9 h-9 rounded-xl bg-blue-600 hover:bg-blue-500 flex items-center justify-center text-white text-sm transition-colors">→</button>
+
+    {{-- CONTACT PANE --}}
+    <div id="contact-pane" class="hidden" style="max-height:430px; overflow-y:auto;">
+
+        {{-- Success screen (hidden by default) --}}
+        <div id="contact-success" class="hidden flex-col items-center justify-center py-10 px-5 text-center">
+            <div class="text-5xl mb-4">🎉</div>
+            <h3 class="text-base font-bold text-white mb-2">Message Sent!</h3>
+            <p class="text-xs text-slate-400 leading-relaxed">
+                We've received your inquiry and sent a confirmation to your email.<br>
+                Our team will reply within <strong class="text-blue-400">48–72 hours</strong>.
+            </p>
+            <button onclick="resetContactForm()" class="mt-5 text-xs bg-blue-600 hover:bg-blue-500 text-white rounded-full px-5 py-2 transition-colors">
+                Send Another Message
+            </button>
+        </div>
+
+        {{-- Form --}}
+        <form id="contact-form" onsubmit="submitContact(event)" class="p-4 flex flex-col gap-3" novalidate>
+
+            {{-- Name --}}
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Your Name <span class="text-red-400">*</span></label>
+                <input id="cf-name" type="text" placeholder="e.g. Rishabh Sharma" maxlength="100"
+                    class="w-full bg-blue-900/20 border border-blue-800/30 rounded-xl px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                <p id="cf-name-err" class="text-red-400 text-[11px] mt-1 hidden"></p>
+            </div>
+
+            {{-- Email --}}
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Your Email <span class="text-red-400">*</span></label>
+                <input id="cf-email" type="email" placeholder="e.g. you@example.com" maxlength="255"
+                    class="w-full bg-blue-900/20 border border-blue-800/30 rounded-xl px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                <p id="cf-email-err" class="text-red-400 text-[11px] mt-1 hidden"></p>
+            </div>
+
+            {{-- Subject --}}
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Subject <span class="text-red-400">*</span></label>
+                <input id="cf-subject" type="text" placeholder="e.g. Issue with translation" maxlength="150"
+                    class="w-full bg-blue-900/20 border border-blue-800/30 rounded-xl px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors">
+                <p id="cf-subject-err" class="text-red-400 text-[11px] mt-1 hidden"></p>
+            </div>
+
+            {{-- Reason --}}
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 mb-1">Message / Reason <span class="text-red-400">*</span></label>
+                <textarea id="cf-reason" rows="4" placeholder="Describe your issue or question in detail..." maxlength="2000"
+                    class="w-full bg-blue-900/20 border border-blue-800/30 rounded-xl px-3 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 transition-colors resize-none"></textarea>
+                <p id="cf-reason-err" class="text-red-400 text-[11px] mt-1 hidden"></p>
+            </div>
+
+            {{-- Error banner --}}
+            <div id="cf-error-banner" class="hidden text-xs bg-red-900/30 border border-red-700/40 text-red-300 rounded-xl px-3 py-2"></div>
+
+            {{-- Submit --}}
+            <button id="cf-submit-btn" type="submit"
+                class="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 text-white text-sm font-semibold transition-all shadow-lg shadow-blue-900/30 flex items-center justify-center gap-2">
+                <span id="cf-btn-text">Send Message 📬</span>
+                <svg id="cf-spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"/>
+                </svg>
+            </button>
+
+            <p class="text-center text-[10px] text-slate-600">We respond within 48–72 hours on business days.</p>
         </form>
     </div>
 </div>
@@ -520,6 +703,7 @@ function toggleSidebar() {
 
 // ── Chatbot ──
 let chatOpen = false;
+let activeChatTab = 'chat';
 const botPanel = document.getElementById('chatbot-panel');
 
 function toggleChat() {
@@ -531,6 +715,117 @@ function toggleChat() {
     
     if (chatOpen) {
         closeNews();
+    }
+}
+
+function switchChatTab(tab) {
+    activeChatTab = tab;
+    const chatPane    = document.getElementById('chat-pane');
+    const contactPane = document.getElementById('contact-pane');
+    const chatBtn     = document.getElementById('tab-chat-btn');
+    const contactBtn  = document.getElementById('tab-contact-btn');
+
+    if (tab === 'chat') {
+        chatPane.classList.remove('hidden');
+        contactPane.classList.add('hidden');
+        chatBtn.classList.add('border-blue-500','text-blue-400','bg-blue-950/30');
+        chatBtn.classList.remove('border-transparent','text-slate-500');
+        contactBtn.classList.remove('border-blue-500','text-blue-400','bg-blue-950/30');
+        contactBtn.classList.add('border-transparent','text-slate-500');
+    } else {
+        contactPane.classList.remove('hidden');
+        chatPane.classList.add('hidden');
+        contactBtn.classList.add('border-blue-500','text-blue-400','bg-blue-950/30');
+        contactBtn.classList.remove('border-transparent','text-slate-500');
+        chatBtn.classList.remove('border-blue-500','text-blue-400','bg-blue-950/30');
+        chatBtn.classList.add('border-transparent','text-slate-500');
+    }
+}
+
+// ── Contact Form ──
+function cfErr(id, msg) {
+    const el = document.getElementById(id);
+    if (msg) { el.textContent = msg; el.classList.remove('hidden'); }
+    else      { el.textContent = ''; el.classList.add('hidden'); }
+}
+
+function resetContactForm() {
+    document.getElementById('contact-form').reset();
+    document.getElementById('contact-success').classList.add('hidden');
+    document.getElementById('contact-success').classList.remove('flex');
+    document.getElementById('contact-form').classList.remove('hidden');
+    ['cf-name-err','cf-email-err','cf-subject-err','cf-reason-err','cf-error-banner'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) { el.classList.add('hidden'); el.textContent = ''; }
+    });
+}
+
+async function submitContact(e) {
+    e.preventDefault();
+    const name    = document.getElementById('cf-name').value.trim();
+    const email   = document.getElementById('cf-email').value.trim();
+    const subject = document.getElementById('cf-subject').value.trim();
+    const reason  = document.getElementById('cf-reason').value.trim();
+
+    // Client-side validation
+    let valid = true;
+    cfErr('cf-name-err',    '');
+    cfErr('cf-email-err',   '');
+    cfErr('cf-subject-err', '');
+    cfErr('cf-reason-err',  '');
+    cfErr('cf-error-banner','');
+
+    if (!name)                          { cfErr('cf-name-err', 'Please enter your name.'); valid = false; }
+    if (!email || !/^[^@]+@[^@]+\.[^@]+$/.test(email)) { cfErr('cf-email-err', 'Please enter a valid email address.'); valid = false; }
+    if (!subject)                       { cfErr('cf-subject-err', 'Please enter a subject.'); valid = false; }
+    if (!reason || reason.length < 10)  { cfErr('cf-reason-err', 'Please enter a message (at least 10 characters).'); valid = false; }
+    if (!valid) return;
+
+    // Show spinner
+    const btn      = document.getElementById('cf-submit-btn');
+    const btnText  = document.getElementById('cf-btn-text');
+    const spinner  = document.getElementById('cf-spinner');
+    btn.disabled   = true;
+    btnText.textContent = 'Sending...';
+    spinner.classList.remove('hidden');
+
+    try {
+        const csrf = document.querySelector('meta[name="csrf-token"]').content;
+        const res  = await fetch('/contact', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json' },
+            body: JSON.stringify({ name, email, subject, reason }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.ok) {
+            // Show success screen
+            document.getElementById('contact-form').classList.add('hidden');
+            const success = document.getElementById('contact-success');
+            success.classList.remove('hidden');
+            success.classList.add('flex');
+        } else {
+            // Server-side validation errors
+            const errors = data.errors || {};
+            if (errors.name)    cfErr('cf-name-err',    errors.name[0]);
+            if (errors.email)   cfErr('cf-email-err',   errors.email[0]);
+            if (errors.subject) cfErr('cf-subject-err', errors.subject[0]);
+            if (errors.reason)  cfErr('cf-reason-err',  errors.reason[0]);
+            if (!Object.keys(errors).length) {
+                const banner = document.getElementById('cf-error-banner');
+                banner.textContent = data.message || 'Something went wrong. Please try again.';
+                banner.classList.remove('hidden');
+            }
+        }
+    } catch (err) {
+        const banner = document.getElementById('cf-error-banner');
+        banner.textContent = 'Network error. Please check your connection and try again.';
+        banner.classList.remove('hidden');
+    } finally {
+        btn.disabled = false;
+        btnText.textContent = 'Send Message 📬';
+        spinner.classList.add('hidden');
     }
 }
 

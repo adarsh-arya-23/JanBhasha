@@ -6,15 +6,19 @@
         <form method="GET" action="{{ route('admin.users.index') }}" class="card px-5 py-4 mb-6 flex flex-wrap items-center gap-3">
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Search name or email…"
                    class="input-field flex-1 min-w-[200px]" style="max-width:280px;">
+            @if(auth()->user()->isSuperAdmin())
             <select name="organisation" class="input-field" style="max-width:200px;">
                 <option value="">All Organisations</option>
                 @foreach($organisations as $org)
                 <option value="{{ $org->id }}" {{ request('organisation') == $org->id ? 'selected' : '' }}>{{ $org->name }}</option>
                 @endforeach
             </select>
+            @endif
             <select name="role" class="input-field" style="max-width:160px;">
                 <option value="">All Roles</option>
+                @if(auth()->user()->isSuperAdmin())
                 <option value="super_admin" {{ request('role') === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                @endif
                 <option value="admin"       {{ request('role') === 'admin'       ? 'selected' : '' }}>Admin</option>
                 <option value="translator"  {{ request('role') === 'translator'  ? 'selected' : '' }}>Translator</option>
             </select>

@@ -11,8 +11,8 @@ class DashboardController extends Controller
     {
         $user = $request->user();
 
-        // Super admins go to dedicated admin dashboard
-        if ($user->isSuperAdmin()) {
+        // Admins and Super Admins go to dedicated admin dashboard
+        if ($user->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
 

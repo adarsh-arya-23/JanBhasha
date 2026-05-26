@@ -44,19 +44,22 @@
                         @error('password')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
 
-                    <div>
+                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1.5">Role <span class="text-red-500">*</span></label>
                         <select name="role" required class="input-field @error('role') border-red-400 @enderror">
                             <option value="">Select a role…</option>
                             <option value="translator"  {{ old('role') === 'translator'  ? 'selected' : '' }}>Translator</option>
                             <option value="admin"       {{ old('role') === 'admin'       ? 'selected' : '' }}>Admin</option>
+                            @if(auth()->user()->isSuperAdmin())
                             <option value="super_admin" {{ old('role') === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                            @endif
                         </select>
                         @error('role')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                 </div>
 
                 <div>
+                    @if(auth()->user()->isSuperAdmin())
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Organisation</label>
                     <select name="organisation_id" class="input-field @error('organisation_id') border-red-400 @enderror">
                         <option value="">None (Super Admin / No Org)</option>
@@ -66,6 +69,12 @@
                     </select>
                     <p class="text-xs text-gray-400 mt-1">Leave blank for Super Admin accounts or platform-level staff.</p>
                     @error('organisation_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    @else
+                    <label class="block text-sm font-medium text-gray-500 mb-1.5">Organisation</label>
+                    <div class="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl">
+                        <span class="text-sm font-semibold text-gray-800">{{ auth()->user()->organisation->name }}</span>
+                    </div>
+                    @endif
                 </div>
 
                 {{-- Role descriptions --}}
