@@ -38,14 +38,14 @@
         /* ── Custom Premium Dashboard Styling ── */
         .dash-card {
             background: #ffffff;
-            border: 1px solid #eaeaea;
+            border: 1px solid #cbd5e1;
             border-radius: 20px;
-            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
             transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
         .dash-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(193, 18, 31, 0.08);
+            box-shadow: 0 10px 25px rgba(255, 71, 87, 0.08);
         }
         .stat-icon-wrapper {
             width: 48px;
@@ -57,8 +57,8 @@
             font-size: 1.25rem;
         }
         .bg-light-red {
-            background: #ffe3e5;
-            color: #c1121f;
+            background: #ffe8ea;
+            color: #ff4757;
         }
         .bg-light-amber {
             background: #fef3c7;
@@ -93,8 +93,8 @@
     <div class="fade-in space-y-6">
 
         {{-- Top Welcome Banner --}}
-        <div class="dash-card overflow-hidden border-l-8" style="border-left-color: #d90429;">
-            <div class="flex items-center p-6 bg-[#ffe3e5] dark:bg-[#2d0e11]">
+        <div class="dash-card overflow-hidden border-l-8" style="border-left-color: #ff4757;">
+            <div class="flex items-center p-6 bg-[#ffe8ea] dark:bg-[#340b10]">
                 <div class="flex-1">
                     <div class="flex items-center gap-3 mb-1">
                         <span class="text-2xl">⚡</span>
@@ -228,7 +228,7 @@
                         </div>
                         <div class="flex-1 min-w-0">
                             @if($isSuper)
-                            <a href="{{ route('admin.organisations.show', $org) }}" class="font-semibold text-gray-800 dark:text-white hover:text-[#c1121f] transition-colors block truncate">
+                            <a href="{{ route('admin.organisations.show', $org) }}" class="font-semibold text-gray-800 dark:text-white hover:text-[#ff4757] transition-colors block truncate">
                                 {{ $org->name }}
                             </a>
                             @else
@@ -289,7 +289,7 @@
             <a href="{{ route('admin.organisations.index') }}" class="dash-card p-5 flex items-center gap-4 hover:shadow-lg transition-all group">
                 <div class="stat-icon-wrapper bg-light-purple text-2xl"><i class="fas fa-building"></i></div>
                 <div>
-                    <div class="font-bold text-gray-800 dark:text-white group-hover:text-[#c1121f] transition-colors">Organisations</div>
+                    <div class="font-bold text-gray-800 dark:text-white group-hover:text-[#ff4757] transition-colors">Organisations</div>
                     <div class="text-[10px] text-gray-400">Manage all orgs</div>
                 </div>
             </a>
@@ -297,21 +297,21 @@
             <a href="{{ route('admin.users.index') }}" class="dash-card p-5 flex items-center gap-4 hover:shadow-lg transition-all group">
                 <div class="stat-icon-wrapper bg-light-red text-2xl"><i class="fas fa-users"></i></div>
                 <div>
-                    <div class="font-bold text-gray-800 dark:text-white group-hover:text-[#c1121f] transition-colors">Users</div>
+                    <div class="font-bold text-gray-800 dark:text-white group-hover:text-[#ff4757] transition-colors">Users</div>
                     <div class="text-[10px] text-gray-400">Manage all users</div>
                 </div>
             </a>
             <a href="{{ route('translations.index') }}" class="dash-card p-5 flex items-center gap-4 hover:shadow-lg transition-all group">
                 <div class="stat-icon-wrapper bg-light-amber text-2xl"><i class="fas fa-clipboard"></i></div>
                 <div>
-                    <div class="font-bold text-gray-800 dark:text-white group-hover:text-[#c1121f] transition-colors">Translations</div>
+                    <div class="font-bold text-gray-800 dark:text-white group-hover:text-[#ff4757] transition-colors">Translations</div>
                     <div class="text-[10px] text-gray-400">Translation logs</div>
                 </div>
             </a>
             <a href="{{ route('glossary.index') }}" class="dash-card p-5 flex items-center gap-4 hover:shadow-lg transition-all group">
                 <div class="stat-icon-wrapper bg-light-emerald text-2xl"><i class="fas fa-book"></i></div>
                 <div>
-                    <div class="font-bold text-gray-800 dark:text-white group-hover:text-[#c1121f] transition-colors">Glossary</div>
+                    <div class="font-bold text-gray-800 dark:text-white group-hover:text-[#ff4757] transition-colors">Glossary</div>
                     <div class="text-[10px] text-gray-400">Glossary terms</div>
                 </div>
             </a>
@@ -333,8 +333,8 @@
             
             // Create a gorgeous red gradient fill
             const redGradient = ctxActivity.createLinearGradient(0, 0, 0, 240);
-            redGradient.addColorStop(0, 'rgba(193, 18, 31, 0.25)');
-            redGradient.addColorStop(1, 'rgba(193, 18, 31, 0.00)');
+            redGradient.addColorStop(0, 'rgba(255, 71, 87, 0.25)');
+            redGradient.addColorStop(1, 'rgba(255, 71, 87, 0.00)');
 
             const monthsData = @json($months);
             const countsData = @json($counts);
@@ -346,12 +346,12 @@
                     datasets: [{
                         label: 'Translations Count',
                         data: countsData,
-                        borderColor: '#c1121f',
+                        borderColor: '#ff4757',
                         borderWidth: 3.5,
                         backgroundColor: redGradient,
                         fill: true,
                         tension: 0.45,
-                        pointBackgroundColor: '#c1121f',
+                        pointBackgroundColor: '#ff4757',
                         pointBorderColor: '#ffffff',
                         pointBorderWidth: 2,
                         pointRadius: 5,
@@ -371,7 +371,7 @@
                         },
                         y: {
                             grid: { 
-                                color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)',
+                                color: isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.1)',
                                 drawTicks: false 
                             },
                             ticks: { 
@@ -394,11 +394,11 @@
                     datasets: [{
                         data: [percent, remaining],
                         backgroundColor: [
-                            '#c1121f',
-                            isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#eaeaea'
+                            '#ff4757',
+                            isDarkMode ? 'rgba(255, 255, 255, 0.1)' : '#cbd5e1'
                         ],
                         borderWidth: 0,
-                        hoverBackgroundColor: ['#a70e1a', isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#dfdfdf']
+                        hoverBackgroundColor: ['#ff6b81', isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#b8c2cc']
                     }]
                 },
                 options: {
