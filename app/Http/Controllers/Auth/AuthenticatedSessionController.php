@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Mail\LoginNotificationMail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -27,6 +29,14 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        // Send login notification email (queued)
+        $user = $request->user();
+        Mail::to($user->email)->queue(new LoginNotificationMail(
+            user:       $user,
+            ipAddress:  $request->ip() ?? 'Unknown',
+            loginTime:  now()->setTimezone('Asia/Kolkata')->format('D, d M Y \a\t h:i A T'),
+        ));
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

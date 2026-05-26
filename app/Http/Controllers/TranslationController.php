@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTranslationRequest;
+use App\Mail\TranslationThankYouMail;
 use App\Models\Translation;
 use App\Services\TranslationService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class TranslationController extends Controller
 {
@@ -71,6 +73,9 @@ class TranslationController extends Controller
                 targetLang: $request->validated('target_lang'),
                 label:      $request->validated('source_label'),
             );
+
+            // Send thank-you email (queued)
+            Mail::to($user->email)->queue(new TranslationThankYouMail($user, $translation));
 
             return redirect()
                 ->route('translations.show', $translation)

@@ -22,6 +22,40 @@ Route::get('/', function () {
 // Public demo translation
 Route::post('/api/translate', [TranslationController::class, 'demoTranslate'])->name('demo.translate');
 
+// Contact form (chat widget) — public, no auth required
+Route::post('/contact', function (\Illuminate\Http\Request $request) {
+    $validated = $request->validate([
+        'name'    => ['required', 'string', 'max:100'],
+        'email'   => ['required', 'email', 'max:255'],
+        'subject' => ['required', 'string', 'max:150'],
+        'reason'  => ['required', 'string', 'max:2000'],
+    ]);
+
+    $submittedAt = now()->setTimezone('Asia/Kolkata')->format('D, d M Y \a\t h:i A T');
+
+    // 1. Notify JanBhasha admin with full inquiry details
+    \Illuminate\Support\Facades\Mail::to(config('mail.from.address'))
+        ->queue(new \App\Mail\ContactInquiryMail(
+            senderName:  $validated['name'],
+            senderEmail: $validated['email'],
+            subject:     $validated['subject'],
+            reason:      $validated['reason'],
+            submittedAt: $submittedAt,
+        ));
+
+    // 2. Send acknowledgement to the person who submitted
+    \Illuminate\Support\Facades\Mail::to($validated['email'])
+        ->queue(new \App\Mail\ContactConfirmationMail(
+            senderName:  $validated['name'],
+            senderEmail: $validated['email'],
+            subject:     $validated['subject'],
+            reason:      $validated['reason'],
+        ));
+
+    return response()->json(['ok' => true]);
+})->name('contact.submit');
+
+
 // Tour complete
 Route::post('/tour/complete', function () {
     auth()->user()->update(['tour_completed' => true]);
