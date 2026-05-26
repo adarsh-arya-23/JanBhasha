@@ -62,13 +62,16 @@
                         <select name="role" required class="input-field @error('role') border-red-400 @enderror">
                             <option value="translator"  {{ old('role', $user->role) === 'translator'  ? 'selected' : '' }}>Translator</option>
                             <option value="admin"       {{ old('role', $user->role) === 'admin'       ? 'selected' : '' }}>Admin</option>
+                            @if(auth()->user()->isSuperAdmin())
                             <option value="super_admin" {{ old('role', $user->role) === 'super_admin' ? 'selected' : '' }}>Super Admin</option>
+                            @endif
                         </select>
                         @error('role')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
                     </div>
                 </div>
 
                 <div>
+                    @if(auth()->user()->isSuperAdmin())
                     <label class="block text-sm font-medium text-gray-700 mb-1.5">Organisation</label>
                     <select name="organisation_id" class="input-field @error('organisation_id') border-red-400 @enderror">
                         <option value="">None (Super Admin / No Org)</option>
@@ -79,6 +82,12 @@
                         @endforeach
                     </select>
                     @error('organisation_id')<p class="text-red-500 text-xs mt-1">{{ $message }}</p>@enderror
+                    @else
+                    <label class="block text-sm font-medium text-gray-500 mb-1.5">Organisation</label>
+                    <div class="px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl">
+                        <span class="text-sm font-semibold text-gray-800">{{ auth()->user()->organisation->name }}</span>
+                    </div>
+                    @endif
                 </div>
 
                 <div class="flex items-center gap-3 pt-2 border-t border-gray-100">
@@ -87,15 +96,21 @@
                     </button>
                     <a href="{{ route('admin.users.index') }}" class="btn-secondary text-sm">Cancel</a>
                     @if($user->id !== auth()->id())
-                    <form method="POST" action="{{ route('admin.users.destroy', $user) }}"
-                          onsubmit="return confirm('Delete {{ $user->name }}? This cannot be undone.')"
-                          class="ml-auto">
-                        @csrf @method('DELETE')
-                        <button type="submit" class="btn-secondary text-sm text-red-500 hover:border-red-400"><i class="fas fa-trash"></i> Delete User</button>
-                    </form>
+                    <button type="button"
+                            onclick="if (confirm('Delete {{ $user->name }}? This cannot be undone.')) { document.getElementById('delete-user-form').submit(); }"
+                            class="btn-secondary text-sm text-red-500 hover:border-red-400 ml-auto">
+                        <i class="fas fa-trash"></i> Delete User
+                    </button>
                     @endif
                 </div>
             </form>
+
+            @if($user->id !== auth()->id())
+            <form id="delete-user-form" method="POST" action="{{ route('admin.users.destroy', $user) }}" class="hidden">
+                @csrf
+                @method('DELETE')
+            </form>
+            @endif
         </div>
     </div>
 </x-app-layout>
