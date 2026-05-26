@@ -75,14 +75,15 @@
 
         /* Dark mode overrides */
         body:not(.light-mode) .dash-card {
-            background: rgba(25, 12, 14, 0.4);
-            border-color: rgba(193, 18, 31, 0.12);
+            background: #161e2e !important;
+            border-color: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
         }
         body:not(.light-mode) .text-gray-900 {
             color: #ffffff !important;
         }
         body:not(.light-mode) .text-gray-500 {
-            color: #ffccd5 !important;
+            color: #94a3b8 !important;
         }
         body:not(.light-mode) .text-gray-800 {
             color: #f5e6e8 !important;
@@ -92,8 +93,8 @@
     <div class="fade-in space-y-6">
 
         {{-- Top Welcome Banner --}}
-        <div class="dash-card overflow-hidden border-l-8" style="border-left-color: #c1121f;">
-            <div class="flex items-center p-6 bg-gradient-to-r from-[#ffe3e5] to-transparent dark:from-[#2a0e11]">
+        <div class="dash-card overflow-hidden border-l-8" style="border-left-color: #d90429;">
+            <div class="flex items-center p-6 bg-[#ffe3e5] dark:bg-[#2d0e11]">
                 <div class="flex-1">
                     <div class="flex items-center gap-3 mb-1">
                         <span class="text-2xl">⚡</span>
