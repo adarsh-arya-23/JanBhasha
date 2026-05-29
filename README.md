@@ -3,7 +3,35 @@
 
 > 🚀 **Live Deployment:** [https://janbhasha.onrender.com](https://janbhasha.onrender.com)
 
-JanBhasha is an AI-powered **English → Hindi translation platform** built for Indian government organisations. It allows government departments to convert official content into Hindi at scale — via a web dashboard or a REST API — while respecting per-organisation monthly character quotas, maintaining a custom glossary, and logging every translation for audit purposes.
+---
+
+## 📌 What is JanBhasha?
+
+**JanBhasha** (जनभाषा — "language of the people") is a **multi-tenant SaaS translation platform** built exclusively for **Indian government departments and organisations**. It solves a critical problem in India's Digital India mission: official communications, circulars, and documents are produced in English but must reach citizens in their regional languages.
+
+JanBhasha provides:
+- A **futuristic web dashboard** for human translators and department admins to submit, track, and manage translations.
+- A **secure REST API** so existing government IT systems can integrate translation programmatically via API keys.
+- A **custom glossary engine** that prevents AI from incorrectly translating official terminology — ensuring "Ministry of Finance" always becomes "वित्त मंत्रालय".
+- **Per-organisation monthly character quotas** with live usage tracking to control costs and prevent misuse.
+- **Full audit logging** of every translation request with status, provider, character count, and cache information.
+- **Role-based multi-tenancy** so data from one government organisation is completely isolated from another.
+
+### 🎯 Target Audience
+
+| User | Role | What They Do |
+|---|---|---|
+| Government Department | Organisation | Onboards on the platform; granted a monthly quota and API key |
+| Translation Staff | `translator` | Submits text for translation and views their organisation's history |
+| Department Head / IT Admin | `admin` | Manages glossary terms and views organisation-wide translation history |
+| Platform Administrator | `super_admin` | Manages all organisations, users, API keys, and has global access |
+
+### 🌐 Supported Languages
+
+JanBhasha supports **Any-to-Any translation** between:
+- All **22+ official Indian languages** including Hindi, Bengali, Tamil, Telugu, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Odia, and more.
+- **English ↔ Indian language** bidirectional translation with a one-click swap toggle.
+- **Japanese** (additional supported language via Google Translate).
 
 ---
 
@@ -54,17 +82,20 @@ JanBhasha is an AI-powered **English → Hindi translation platform** built for 
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Backend** | PHP 8.2 / Laravel 12 |
-| **Frontend** | Blade Templates + TailwindCSS v4 + Alpine.js |
-| **Aesthetics** | **Futuristic Dark Mode** + Glassmorphism + Animated Gradients |
-| **AI Engine** | Google Cloud Translation API v2 · LibreTranslate · Free Google Bridge |
-| **Database** | **MongoDB Atlas** (Cloud NoSQL — `mongodb` driver via PECL extension) |
-| **Authentication** | Laravel Breeze (session) + Laravel Sanctum (API tokens) |
-| **Deployment** | **Render.com** — Dockerized PHP 8.2 + Apache container |
-| **Build Tooling** | Vite + `@tailwindcss/vite` |
-| **Testing** | PHPUnit 11 |
+| Layer | Technology | Notes |
+|---|---|---|
+| **Backend** | PHP 8.2 / Laravel 12 | MVC framework, Eloquent ORM, service layer pattern |
+| **Frontend** | Blade Templates + TailwindCSS v4 + Alpine.js | Reactive UI components without a full SPA |
+| **Aesthetics** | Futuristic Dark Mode + Glassmorphism + Animated Gradients | 2026-style premium interface with tricolor accents |
+| **Translation Engine** | Google Cloud Translation API v2 · LibreTranslate · Mock (dev) | Switchable via `TRANSLATION_PROVIDER` env variable |
+| **Database** | **MongoDB Atlas** (Cloud NoSQL) | `mongodb/laravel-mongodb` Eloquent driver; schema-less documents; soft deletes enabled |
+| **Authentication (Web)** | Laravel Breeze | Session-based login, CSRF protection, email verification |
+| **Authentication (API)** | Custom `AuthenticateApiKey` middleware | `X-API-Key` header; 61-character cryptographically random keys |
+| **Email Notifications** | Laravel Mail + SMTP | Login notifications, welcome emails, translation confirmation mails |
+| **Deployment** | Render.com — Dockerized PHP 8.2 + Apache | `Dockerfile` + `render.yaml` + `docker-entrypoint.sh` included |
+| **Build Tooling** | Vite + `@tailwindcss/vite` | Modern asset bundling with hot reload in dev |
+| **Dev Tooling** | Composer scripts (`setup`, `dev`, `test`) | One-command setup and concurrent dev service runner |
+| **Testing** | PHPUnit 11 | Unit + Feature suites; `composer test` shortcut |
 
 ---
 
@@ -358,6 +389,19 @@ php artisan test --testsuite=Feature
 Test coverage includes:
 - `GlossaryServiceTest` — tokenization, detokenization, case-sensitivity
 - `TranslationApiTest` — API key auth, quota enforcement, caching behaviour, history pagination
+
+---
+
+## 🗺️ Planned Features (Roadmap)
+
+The following features are tracked in [`future-fix.txt`](future-fix.txt) and are planned for upcoming releases:
+
+| Feature | Description |
+|---|---|
+| 📧 **Email Notifications (SMTP)** | Transactional emails via SMTP — welcome on signup, login alert, per-translation thank-you email with website link, and password reset flow. All sent from the "JanBhasha" sender identity. |
+| 🖼️ **User Profile Photos** | Users can upload a profile picture stored in the database, visible on their own profile and to admins/super-admins. |
+| 📜 **Personal Translation History** | Each user sees only their own translation history. History is private to the user, but visible to admins and super-admins of the same organisation. |
+| 🔐 **Enhanced Super-Admin User Management** | Super-admin user detail pages showing per-user history, with controls to delete a user's history, reset their password, or remove their account — all without requiring user confirmation. |
 
 ---
 
